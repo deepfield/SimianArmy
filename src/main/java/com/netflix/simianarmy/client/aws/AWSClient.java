@@ -27,6 +27,7 @@ import com.amazonaws.services.autoscaling.model.*;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.*;
+import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Tag;
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancingClient;
@@ -472,6 +473,31 @@ public class AWSClient implements CloudClient {
         if (instanceIds != null) {
             request.withInstanceIds(Arrays.asList(instanceIds));
         }
+        DescribeInstancesResult result = ec2Client.describeInstances(request);
+        for (Reservation reservation : result.getReservations()) {
+            instances.addAll(reservation.getInstances());
+        }
+
+        LOGGER.info(String.format("Got %d EC2 instances in region %s.", instances.size(), region));
+        return instances;
+    }
+
+
+    /**
+     * Describe a set of vlabs instances
+     *
+     * @param virtualLabName the virtual lab name to search for
+     * @return the instances
+     */
+    public List<Instance> describeVlabsCluster(String virtualLabName) {
+        List<Instance> instances = new LinkedList<Instance>();
+        List<String> names = new ArrayList<>(1);
+        names.add(virtualLabName);
+
+        AmazonEC2 ec2Client = ec2Client();
+        DescribeInstancesRequest request = new DescribeInstancesRequest();
+        Filter filter = new Filter("vlabs-name", names);
+        request.withFilters(filter);
         DescribeInstancesResult result = ec2Client.describeInstances(request);
         for (Reservation reservation : result.getReservations()) {
             instances.addAll(reservation.getInstances());
