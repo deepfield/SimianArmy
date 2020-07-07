@@ -65,88 +65,11 @@ public class VlabsMonkeyServer extends BasicMonkeyServer {
     @SuppressWarnings("rawtypes")
     private Class chaosClass = com.netflix.simianarmy.vlabs.chaos.VlabsChaosMonkey.class;
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        configureClient();
-        addMonkeysToRun();
-        RUNNER.start();
-    }
-
-    /**
-     * Loads the client that is configured.
-     * @throws ServletException
-     *             if the configured client cannot be loaded properly
-     */
-    @SuppressWarnings("rawtypes")
-    private void configureClient() throws ServletException {
-        Properties clientConfig = loadClientConfigProperties();
-
-        Class newContextClass = loadClientClass(clientConfig, "simianarmy.client.context.class");
-        this.chaosContextClass = (newContextClass == null ? this.chaosContextClass : newContextClass);
-
-        Class newChaosClass = loadClientClass(clientConfig, "simianarmy.client.chaos.class");
-        this.chaosClass = (newChaosClass == null ? this.chaosClass : newChaosClass);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Class loadClientClass(Properties clientConfig, String key) throws ServletException {
-        ClassLoader classLoader = VlabsMonkeyServer.class.getClassLoader();
-        try {
-            String clientClassName = clientConfig.getProperty(key);
-            if (clientClassName == null || clientClassName.isEmpty()) {
-                LOGGER.info("using standard client for " + key);
-                return null;
-            }
-        Class newClass = classLoader.loadClass(clientClassName);
-            LOGGER.info("using " + key + " loaded " + newClass.getCanonicalName());
-            return newClass;
-        } catch (ClassNotFoundException e) {
-            throw new ServletException("Could not load " + key, e);
-        }
-    }
-
-    /**
-     * Load the client config properties file.
-     *
-     * @return Properties The contents of the client config file
-     * @throws ServletException
-     *             if the file cannot be read
-     */
-    private Properties loadClientConfigProperties() throws ServletException {
-        String propertyFileName = "client.properties";
-        String clientConfigFileName = System.getProperty(propertyFileName, "/" + propertyFileName);
-        LOGGER.info("using client properties " + clientConfigFileName);
-
-        InputStream input = null;
-        Properties p = new Properties();
-        try {
-            try {
-                input = VlabsMonkeyServer.class.getResourceAsStream(clientConfigFileName);
-                p.load(input);
-                return p;
-            } finally {
-                if (input != null) {
-                    input.close();
-                }
-            }
-        } catch (IOException e) {
-            throw new ServletException("Could not load " + clientConfigFileName, e);
-        }
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void destroy() {
         RUNNER.stop();
-        LOGGER.info("Stopping Chaos Monkey.");
+        LOGGER.info("Stopping Vlabs Chaos Monkey.");
         RUNNER.removeMonkey(this.chaosClass);
-        LOGGER.info("Stopping Volume Tagging Monkey.");
-        RUNNER.removeMonkey(VolumeTaggingMonkey.class);
-        LOGGER.info("Stopping Janitor Monkey.");
-        RUNNER.removeMonkey(BasicJanitorMonkey.class);
-        LOGGER.info("Stopping Conformity Monkey.");
-        RUNNER.removeMonkey(BasicConformityMonkey.class);
-        super.destroy();
     }
 }
