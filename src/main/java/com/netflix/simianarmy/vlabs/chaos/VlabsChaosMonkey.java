@@ -19,12 +19,9 @@ package com.netflix.simianarmy.vlabs.chaos;
 
 import com.google.common.collect.Lists;
 import com.netflix.simianarmy.*;
-import com.netflix.simianarmy.MonkeyRecorder.Event;
 import com.netflix.simianarmy.basic.chaos.BasicChaosMonkey;
 import com.netflix.simianarmy.chaos.*;
-import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;
 import com.netflix.simianarmy.vlabs.VlabsChaosMonkeyContext;
-import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +37,7 @@ public class VlabsChaosMonkey extends BasicChaosMonkey {
     private static final Logger LOGGER = LoggerFactory.getLogger(VlabsChaosMonkey.class);
 
     /** The Constant NS. */
-    private static final String NS = "simianarmy.chaos.vlabs.";
+    private static final String NS = "simianarmy.chaos.";
 
     /** The cfg. */
     private final MonkeyConfiguration cfg;
@@ -98,6 +95,23 @@ public class VlabsChaosMonkey extends BasicChaosMonkey {
         } else {
             long units = freqUnit.convert(close.getTimeInMillis() - open.getTimeInMillis(), TimeUnit.MILLISECONDS);
             runsPerDay = units / ctx.scheduler().frequency();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void doMonkeyBusiness() {
+        context().resetEventReport();
+        cfg.reload();
+        String[] vLabsNames = this.cfg.getStr(NS + "vlabs.name").split(",");
+        if (!isChaosMonkeyEnabled()) {
+            return;
+        }
+        for (ChaosCrawler.InstanceGroup group : context().chaosCrawler().groups(vLabsNames)) {
+            Boolean exit = monkeyBusiness(group);
+            if (exit) {
+                break;
+            }
         }
     }
 }

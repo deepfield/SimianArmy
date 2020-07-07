@@ -224,7 +224,7 @@ public enum MonkeyRunner {
                 if (paramTypes.length != 1) {
                     continue;
                 }
-                if (paramTypes[0].getName().endsWith("$Context")) {
+                if (paramTypes[0].getName().endsWith("Context")) {
                     @SuppressWarnings("unchecked")
                     T monkey = (T) ctor.newInstance(contextClass.newInstance());
                     return monkey;

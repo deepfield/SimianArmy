@@ -108,29 +108,37 @@ public class BasicChaosMonkey extends ChaosMonkey {
                 return;
             }
             for (InstanceGroup group : context().chaosCrawler().groups()) {
-                if (isGroupEnabled(group)) {
-                    if (isMaxTerminationCountExceeded(group)) {
-                        continue;
-                    }
-                    double prob = getEffectiveProbability(group);
-                    Collection<String> instances = context().chaosInstanceSelector().select(group, prob / runsPerDay);
-                    for (String inst : instances) {
-                        if (isMaxTerminationCountExceeded(group)) {
-                            break;
-                        }
-                        ChaosType chaosType = pickChaosType(context().cloudClient(), inst);
-                        if (chaosType == null) {
-                            // This is surprising ... normally we can always just terminate it
-                            LOGGER.warn("No chaos type was applicable to the instance: {}", inst);
-                            continue;
-                        }
-                        terminateInstance(group, inst, chaosType);
-                    }
+                Boolean exit = monkeyBusiness(group);
+                if (exit) {
+                    break;
                 }
             }
     }
 
-    private ChaosType pickChaosType(CloudClient cloudClient, String instanceId) {
+    protected Boolean monkeyBusiness(InstanceGroup group) {
+        if (isGroupEnabled(group)) {
+            if (isMaxTerminationCountExceeded(group)) {
+                return false;
+            }
+            double prob = getEffectiveProbability(group);
+            Collection<String> instances = context().chaosInstanceSelector().select(group, prob / runsPerDay);
+            for (String inst : instances) {
+                if (isMaxTerminationCountExceeded(group)) {
+                    return true;
+                }
+                ChaosType chaosType = pickChaosType(context().cloudClient(), inst);
+                if (chaosType == null) {
+                    // This is surprising ... normally we can always just terminate it
+                    LOGGER.warn("No chaos type was applicable to the instance: {}", inst);
+                    return false;
+                }
+                terminateInstance(group, inst, chaosType);
+            }
+        }
+        return false;
+    }
+
+    protected ChaosType pickChaosType(CloudClient cloudClient, String instanceId) {
         Random random = new Random();
 
         SshConfig sshConfig = new SshConfig(cfg);
@@ -338,7 +346,7 @@ public class BasicChaosMonkey extends ChaosMonkey {
         }
     }
 
-    private boolean isChaosMonkeyEnabled() {
+    protected boolean isChaosMonkeyEnabled() {
         String prop = NS + "enabled";
         if (cfg.getBoolOrElse(prop, true)) {
             return true;

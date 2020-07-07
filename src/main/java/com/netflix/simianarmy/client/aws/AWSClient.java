@@ -496,7 +496,7 @@ public class AWSClient implements CloudClient {
 
         AmazonEC2 ec2Client = ec2Client();
         DescribeInstancesRequest request = new DescribeInstancesRequest();
-        Filter filter = new Filter("vlabs-name", names);
+        Filter filter = new Filter("tag:vlabs-name", names);
         request.withFilters(filter);
         DescribeInstancesResult result = ec2Client.describeInstances(request);
         for (Reservation reservation : result.getReservations()) {

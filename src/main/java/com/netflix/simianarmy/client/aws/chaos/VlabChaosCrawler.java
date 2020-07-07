@@ -64,11 +64,15 @@ public class VlabChaosCrawler implements ChaosCrawler {
     public List<InstanceGroup> groups(String... names) {
         List<InstanceGroup> list = new LinkedList<InstanceGroup>();
 
-        for (String name : names) {
-            List<Instance> instances = awsClient.describeVlabsCluster(name);
+        if (names != null) {
+            for (String name : names) {
+                List<Instance> instances = awsClient.describeVlabsCluster(name);
 
-            list.add(getVlabInstanceGroup(name, instances));
+                list.add(getVlabInstanceGroup(name, instances));
 
+            }
+        } else {
+            LOGGER.debug("No vlab name specified in config.");
         }
 
         return list;

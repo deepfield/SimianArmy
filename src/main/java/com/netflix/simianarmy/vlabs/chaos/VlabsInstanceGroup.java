@@ -18,12 +18,9 @@
 package com.netflix.simianarmy.vlabs.chaos;
 
 import com.amazonaws.services.autoscaling.model.TagDescription;
-import com.amazonaws.services.ec2.model.Instance;
 import com.netflix.simianarmy.GroupType;
 import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

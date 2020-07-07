@@ -18,21 +18,9 @@
 package com.netflix.simianarmy.vlabs;
 
 import com.netflix.simianarmy.MonkeyRunner;
-import com.netflix.simianarmy.aws.janitor.VolumeTaggingMonkey;
 import com.netflix.simianarmy.basic.BasicMonkeyServer;
-import com.netflix.simianarmy.basic.conformity.BasicConformityMonkey;
-import com.netflix.simianarmy.basic.conformity.BasicConformityMonkeyContext;
-import com.netflix.simianarmy.basic.janitor.BasicJanitorMonkey;
-import com.netflix.simianarmy.basic.janitor.BasicJanitorMonkeyContext;
-import com.netflix.simianarmy.basic.janitor.BasicVolumeTaggingMonkeyContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 /**
  * Will periodically run the configured monkeys.

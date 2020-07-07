@@ -28,8 +28,6 @@ import com.netflix.simianarmy.chaos.ChaosCrawler;
 import com.netflix.simianarmy.chaos.ChaosEmailNotifier;
 import com.netflix.simianarmy.chaos.ChaosInstanceSelector;
 import com.netflix.simianarmy.chaos.ChaosMonkey;
-import com.netflix.simianarmy.client.aws.chaos.FilteringChaosCrawler;
-import com.netflix.simianarmy.client.aws.chaos.TagPredicate;
 import com.netflix.simianarmy.client.aws.chaos.VlabChaosCrawler;
 
 /**
@@ -54,11 +52,9 @@ public class VlabsChaosMonkeyContext extends BasicSimianArmyContext implements C
     public VlabsChaosMonkeyContext() {
         super("simianarmy.properties", "client.properties", "chaos.properties");
         MonkeyConfiguration cfg = configuration();
-        String tagKey = "vlabs-name";
-        String tagValue = cfg.getStrOrElse("simianarmy.chaos.vlabs.name", "");
 
         VlabChaosCrawler chaosCrawler = new VlabChaosCrawler(awsClient());
-        setChaosCrawler(new FilteringChaosCrawler(chaosCrawler, new TagPredicate(tagKey, tagValue)));
+        setChaosCrawler(chaosCrawler);
         setChaosInstanceSelector(new BasicChaosInstanceSelector());
         AmazonSimpleEmailServiceClient sesClient = new AmazonSimpleEmailServiceClient(awsClientConfig);
         if (configuration().getStr("simianarmy.aws.email.region") != null) {
