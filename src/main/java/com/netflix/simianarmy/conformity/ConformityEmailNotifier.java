@@ -17,7 +17,7 @@
  */
 package com.netflix.simianarmy.conformity;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.netflix.simianarmy.aws.AWSEmailNotifier;
@@ -58,7 +58,7 @@ public class ConformityEmailNotifier  extends AWSEmailNotifier {
          * Gets the Amazon Simple Email Service client.
          * @return the Amazon Simple Email Service client
          */
-        AmazonSimpleEmailServiceClient sesClient();
+        AmazonSimpleEmailService sesClient();
 
         /**
          * Gets the open hour the email notifications are sent.

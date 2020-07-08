@@ -17,30 +17,33 @@
  */
 package com.netflix.simianarmy.client.aws;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.ClientConfiguration;
+import com.amazonaws.*;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSSessionCredentials;
-import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.autoscaling.AmazonAutoScaling;
+import com.amazonaws.services.autoscaling.AmazonAutoScalingClientBuilder;
 import com.amazonaws.services.autoscaling.model.*;
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.*;
 import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Tag;
-import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancingClient;
+import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
+import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancingClientBuilder;
 import com.amazonaws.services.elasticloadbalancing.model.*;
 import com.amazonaws.services.elasticloadbalancing.model.DescribeLoadBalancersRequest;
 import com.amazonaws.services.elasticloadbalancing.model.DescribeLoadBalancersResult;
 import com.amazonaws.services.elasticloadbalancing.model.DescribeTagsRequest;
 import com.amazonaws.services.elasticloadbalancing.model.DescribeTagsResult;
 import com.amazonaws.services.elasticloadbalancing.model.TagDescription;
-import com.amazonaws.services.route53.AmazonRoute53Client;
+import com.amazonaws.services.route53.AmazonRoute53;
+import com.amazonaws.services.route53.AmazonRoute53ClientBuilder;
 import com.amazonaws.services.route53.model.*;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
-import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
+import com.amazonaws.services.simpledb.AmazonSimpleDBClientBuilder;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
@@ -205,22 +208,26 @@ public class AWSClient implements CloudClient {
      * @return the Amazon EC2 client
      */
     protected AmazonEC2 ec2Client() {
-        AmazonEC2 client;
+        AmazonEC2ClientBuilder clientBuilder;
         if (awsClientConfig == null) {
             if (awsCredentialsProvider == null) {
-                client = new AmazonEC2Client();
+                clientBuilder = AmazonEC2ClientBuilder.standard();
             } else {
-                client = new AmazonEC2Client(awsCredentialsProvider);
+                clientBuilder = AmazonEC2ClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider);
             }
         } else {
             if (awsCredentialsProvider == null) {
-                client = new AmazonEC2Client(awsClientConfig);
+                clientBuilder = AmazonEC2ClientBuilder.standard()
+                        .withClientConfiguration(awsClientConfig);
             } else {
-                client = new AmazonEC2Client(awsCredentialsProvider, awsClientConfig);
+                clientBuilder = AmazonEC2ClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider)
+                        .withClientConfiguration(awsClientConfig);
             }
         }
-        client.setEndpoint("ec2." + region + ".amazonaws.com");
-        return client;
+        clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("ec2." + region + ".amazonaws.com", region));
+        return clientBuilder.build();
     }
 
     /**
@@ -228,23 +235,27 @@ public class AWSClient implements CloudClient {
      *
      * @return the Amazon Auto Scaling client
      */
-    protected AmazonAutoScalingClient asgClient() {
-        AmazonAutoScalingClient client;
+    protected AmazonAutoScaling asgClient() {
+        AmazonAutoScalingClientBuilder clientBuilder;
         if (awsClientConfig == null) {
             if (awsCredentialsProvider == null) {
-                client = new AmazonAutoScalingClient();
+                clientBuilder = AmazonAutoScalingClientBuilder.standard();
             } else {
-                client = new AmazonAutoScalingClient(awsCredentialsProvider);
+                clientBuilder = AmazonAutoScalingClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider);
             }
         } else {
             if (awsCredentialsProvider == null) {
-                client = new AmazonAutoScalingClient(awsClientConfig);
+                clientBuilder = AmazonAutoScalingClientBuilder.standard()
+                        .withClientConfiguration(awsClientConfig);
             } else {
-                client = new AmazonAutoScalingClient(awsCredentialsProvider, awsClientConfig);
+                clientBuilder = AmazonAutoScalingClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider)
+                        .withClientConfiguration(awsClientConfig);
             }
         }
-        client.setEndpoint("autoscaling." + region + ".amazonaws.com");
-        return client;
+        clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("autoscaling." + region + ".amazonaws.com", region));
+        return clientBuilder.build();
     }
 
     /**
@@ -252,23 +263,27 @@ public class AWSClient implements CloudClient {
      *
      * @return the Amazon ELB client
      */
-    protected AmazonElasticLoadBalancingClient elbClient() {
-        AmazonElasticLoadBalancingClient client;
+    private AmazonElasticLoadBalancing elbClient() {
+        AmazonElasticLoadBalancingClientBuilder clientBuilder;
         if (awsClientConfig == null) {
             if (awsCredentialsProvider == null) {
-                client = new AmazonElasticLoadBalancingClient();
+                clientBuilder = AmazonElasticLoadBalancingClientBuilder.standard();
             } else {
-                client = new AmazonElasticLoadBalancingClient(awsCredentialsProvider);
+                clientBuilder = AmazonElasticLoadBalancingClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider);
             }
         } else {
             if (awsCredentialsProvider == null) {
-                client = new AmazonElasticLoadBalancingClient(awsClientConfig);
+                clientBuilder = AmazonElasticLoadBalancingClientBuilder.standard()
+                        .withClientConfiguration(awsClientConfig);
             } else {
-                client = new AmazonElasticLoadBalancingClient(awsCredentialsProvider, awsClientConfig);
+                clientBuilder = AmazonElasticLoadBalancingClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider)
+                        .withClientConfiguration(awsClientConfig);
             }
         }
-        client.setEndpoint("elasticloadbalancing." + region + ".amazonaws.com");
-        return client;
+        clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("elasticloadbalancing." + region + ".amazonaws.com", region));
+        return clientBuilder.build();
     }
 
     /**
@@ -276,23 +291,27 @@ public class AWSClient implements CloudClient {
      *
      * @return the Amazon Route53 client
      */
-    protected AmazonRoute53Client route53Client() {
-        AmazonRoute53Client client;
+    private AmazonRoute53 route53Client() {
+        AmazonRoute53ClientBuilder clientBuilder;
         if (awsClientConfig == null) {
             if (awsCredentialsProvider == null) {
-                client = new AmazonRoute53Client();
+                clientBuilder = AmazonRoute53ClientBuilder.standard();
             } else {
-                client = new AmazonRoute53Client(awsCredentialsProvider);
+                clientBuilder = AmazonRoute53ClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider);
             }
         } else {
             if (awsCredentialsProvider == null) {
-                client = new AmazonRoute53Client(awsClientConfig);
+                clientBuilder = AmazonRoute53ClientBuilder.standard()
+                        .withClientConfiguration(awsClientConfig);
             } else {
-                client = new AmazonRoute53Client(awsCredentialsProvider, awsClientConfig);
+                clientBuilder = AmazonRoute53ClientBuilder.standard()
+                        .withCredentials(awsCredentialsProvider)
+                        .withClientConfiguration(awsClientConfig);
             }
         }
-        client.setEndpoint("route53.amazonaws.com");
-        return client;
+        clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("route53.amazonaws.com", region));
+        return clientBuilder.build();
     }
 
     /**
@@ -301,7 +320,7 @@ public class AWSClient implements CloudClient {
      * @return the Amazon SimpleDB client
      */
     public AmazonSimpleDB sdbClient() {
-        AmazonSimpleDB client;
+        AmazonSimpleDBClientBuilder clientBuilder;
         ClientConfiguration cc = awsClientConfig;
         
         if (cc == null) { 
@@ -310,19 +329,19 @@ public class AWSClient implements CloudClient {
         }
         
         if (awsCredentialsProvider == null) {
-            client = new AmazonSimpleDBClient(cc);
+            clientBuilder = AmazonSimpleDBClientBuilder.standard().withClientConfiguration(cc);
         } else {
-            client = new AmazonSimpleDBClient(awsCredentialsProvider, cc);
+            clientBuilder = AmazonSimpleDBClientBuilder.standard().withClientConfiguration(cc).withCredentials(awsCredentialsProvider);
         }
         
         // us-east-1 has special naming
         // http://docs.amazonwebservices.com/general/latest/gr/rande.html#sdb_region
         if (region == null || region.equals("us-east-1")) {
-            client.setEndpoint("sdb.amazonaws.com");
+            clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("sdb.amazonaws.com", region));
         } else {
-            client.setEndpoint("sdb." + region + ".amazonaws.com");
+            clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("sdb." + region + ".amazonaws.com", region));
         }
-        return client;
+        return clientBuilder.build();
     }
     
     /**
@@ -347,9 +366,9 @@ public class AWSClient implements CloudClient {
             LOGGER.info(String.format("Getting auto-scaling groups for %d names in region %s.", names.length, region));
         }
 
-        List<AutoScalingGroup> asgs = new LinkedList<AutoScalingGroup>();
+        List<AutoScalingGroup> asgs = new LinkedList<>();
 
-        AmazonAutoScalingClient asgClient = asgClient();
+        AmazonAutoScaling asgClient = asgClient();
         DescribeAutoScalingGroupsRequest request = new DescribeAutoScalingGroupsRequest();
         if (names != null) {
             request.setAutoScalingGroupNames(Arrays.asList(names));
@@ -380,7 +399,7 @@ public class AWSClient implements CloudClient {
             LOGGER.info(String.format("Getting ELBs for %d names in region %s.", names.length, region));
         }
 
-        AmazonElasticLoadBalancingClient elbClient = elbClient();
+        AmazonElasticLoadBalancing elbClient = elbClient();
         DescribeLoadBalancersRequest request = new DescribeLoadBalancersRequest().withLoadBalancerNames(names);
         DescribeLoadBalancersResult result = elbClient.describeLoadBalancers(request);
         List<LoadBalancerDescription> elbs = result.getLoadBalancerDescriptions();
@@ -396,7 +415,7 @@ public class AWSClient implements CloudClient {
      */
     public LoadBalancerAttributes describeElasticLoadBalancerAttributes(String name) {
         LOGGER.info(String.format("Getting attributes for ELB with name '%s' in region %s.", name, region));
-        AmazonElasticLoadBalancingClient elbClient = elbClient();
+        AmazonElasticLoadBalancing elbClient = elbClient();
         DescribeLoadBalancerAttributesRequest request = new DescribeLoadBalancerAttributesRequest().withLoadBalancerName(name);
         DescribeLoadBalancerAttributesResult result = elbClient.describeLoadBalancerAttributes(request);
         LoadBalancerAttributes attrs = result.getLoadBalancerAttributes();
@@ -412,7 +431,7 @@ public class AWSClient implements CloudClient {
      */
     public List<TagDescription> describeElasticLoadBalancerTags(String name) {
         LOGGER.info(String.format("Getting tags for ELB with name '%s' in region %s.", name, region));
-        AmazonElasticLoadBalancingClient elbClient = elbClient();
+        AmazonElasticLoadBalancing elbClient = elbClient();
         DescribeTagsRequest request = new DescribeTagsRequest().withLoadBalancerNames(name);
         DescribeTagsResult result = elbClient.describeTags(request);
         LOGGER.info(String.format("Got tags for ELB with name '%s' in region %s.", name, region));
@@ -433,16 +452,14 @@ public class AWSClient implements CloudClient {
                     instanceIds.length, region));
         }
 
-        List<AutoScalingInstanceDetails> instances = new LinkedList<AutoScalingInstanceDetails>();
-
-        AmazonAutoScalingClient asgClient = asgClient();
+        AmazonAutoScaling asgClient = asgClient();
         DescribeAutoScalingInstancesRequest request = new DescribeAutoScalingInstancesRequest();
         if (instanceIds != null) {
             request.setInstanceIds(Arrays.asList(instanceIds));
         }
         DescribeAutoScalingInstancesResult result = asgClient.describeAutoScalingInstances(request);
 
-        instances.addAll(result.getAutoScalingInstances());
+        List<AutoScalingInstanceDetails> instances = new LinkedList<AutoScalingInstanceDetails>(result.getAutoScalingInstances());
         while (result.getNextToken() != null) {
             request = request.withNextToken(result.getNextToken());
             result = asgClient.describeAutoScalingInstances(request);
@@ -521,14 +538,12 @@ public class AWSClient implements CloudClient {
                     names.length, region));
         }
 
-        List<LaunchConfiguration> lcs = new LinkedList<LaunchConfiguration>();
-
-        AmazonAutoScalingClient asgClient = asgClient();
+        AmazonAutoScaling asgClient = asgClient();
         DescribeLaunchConfigurationsRequest request = new DescribeLaunchConfigurationsRequest()
         .withLaunchConfigurationNames(names);
         DescribeLaunchConfigurationsResult result = asgClient.describeLaunchConfigurations(request);
 
-        lcs.addAll(result.getLaunchConfigurations());
+        List<LaunchConfiguration> lcs = new LinkedList<>(result.getLaunchConfigurations());
         while (result.getNextToken() != null) {
             request.setNextToken(result.getNextToken());
             result = asgClient.describeLaunchConfigurations(request);
@@ -544,7 +559,7 @@ public class AWSClient implements CloudClient {
     public void deleteAutoScalingGroup(String asgName) {
         Validate.notEmpty(asgName);
         LOGGER.info(String.format("Deleting auto-scaling group with name %s in region %s.", asgName, region));
-        AmazonAutoScalingClient asgClient = asgClient();
+        AmazonAutoScaling asgClient = asgClient();
         DeleteAutoScalingGroupRequest request = new DeleteAutoScalingGroupRequest()
         .withAutoScalingGroupName(asgName).withForceDelete(true);
         try {
@@ -561,7 +576,7 @@ public class AWSClient implements CloudClient {
         Validate.notEmpty(launchConfigName);
         LOGGER.info(String.format("Deleting launch configuration with name %s in region %s.",
                 launchConfigName, region));
-        AmazonAutoScalingClient asgClient = asgClient();
+        AmazonAutoScaling asgClient = asgClient();
         DeleteLaunchConfigurationRequest request = new DeleteLaunchConfigurationRequest()
                 .withLaunchConfigurationName(launchConfigName);
         asgClient.deleteLaunchConfiguration(request);
@@ -603,7 +618,7 @@ public class AWSClient implements CloudClient {
     public void deleteElasticLoadBalancer(String elbId) {
         Validate.notEmpty(elbId);
         LOGGER.info(String.format("Deleting ELB %s in region %s.", elbId, region));
-        AmazonElasticLoadBalancingClient elbClient = elbClient();
+        AmazonElasticLoadBalancing elbClient = elbClient();
         DeleteLoadBalancerRequest request = new DeleteLoadBalancerRequest(elbId);
         elbClient.deleteLoadBalancer(request);
     }
@@ -616,7 +631,7 @@ public class AWSClient implements CloudClient {
 
         if(dnsType.equals("A") || dnsType.equals("AAAA") || dnsType.equals("CNAME")) {
             LOGGER.info(String.format("Deleting DNS Route 53 record %s", dnsName));
-            AmazonRoute53Client route53Client = route53Client();
+            AmazonRoute53 route53Client = route53Client();
 
             // AWS API requires us to query for the record first
             ListResourceRecordSetsRequest listRequest = new ListResourceRecordSetsRequest(hostedZoneID);
@@ -647,7 +662,7 @@ public class AWSClient implements CloudClient {
         Validate.notEmpty(instanceId);
         LOGGER.info(String.format("Terminating instance %s in region %s.", instanceId, region));
         try {
-            ec2Client().terminateInstances(new TerminateInstancesRequest(Arrays.asList(instanceId)));
+            ec2Client().terminateInstances(new TerminateInstancesRequest(Collections.singletonList(instanceId)));
         } catch (AmazonServiceException e) {
             if (e.getErrorCode().equals("InvalidInstanceID.NotFound")) {
                 throw new NotFoundException("AWS instance " + instanceId + " not found", e);
@@ -714,7 +729,7 @@ public class AWSClient implements CloudClient {
         AmazonEC2 ec2Client = ec2Client();
         DescribeSnapshotsRequest request = new DescribeSnapshotsRequest();
         // Set the owner id to self to avoid getting snapshots from other accounts.
-        request.withOwnerIds(Arrays.<String>asList("self"));
+        request.withOwnerIds(Collections.singletonList("self"));
         if (snapshotIds != null) {
             request.setSnapshotIds(Arrays.asList(snapshotIds));
         }
@@ -732,7 +747,7 @@ public class AWSClient implements CloudClient {
         Validate.notNull(resourceIds);
         Validate.notEmpty(resourceIds);
         AmazonEC2 ec2Client = ec2Client();
-        List<Tag> tags = new ArrayList<Tag>();
+        List<Tag> tags = new ArrayList<>();
         for (Map.Entry<String, String> entry : keyValueMap.entrySet()) {
             tags.add(new Tag(entry.getKey(), entry.getValue()));
         }
@@ -788,7 +803,7 @@ public class AWSClient implements CloudClient {
         Validate.notEmpty(instanceId);
         LOGGER.info(String.format("Listing volumes attached to instance %s in region %s.", instanceId, region));
         try {
-            List<String> volumeIds = new ArrayList<String>();
+            List<String> volumeIds = new ArrayList<>();
             for (Instance instance : describeInstances(instanceId)) {
                 String rootDeviceName = instance.getRootDeviceName();
 
@@ -825,7 +840,7 @@ public class AWSClient implements CloudClient {
      * @param groupNames the names of the groups to find
      * @return a list of matching groups
      */
-    public List<SecurityGroup> describeSecurityGroups(String... groupNames) {
+    private List<SecurityGroup> describeSecurityGroups(String... groupNames) {
         AmazonEC2 ec2Client = ec2Client();
         DescribeSecurityGroupsRequest request = new DescribeSecurityGroupsRequest();
 
@@ -875,7 +890,7 @@ public class AWSClient implements CloudClient {
      * @param instanceId id of instance to find
      * @return the instance info, or null if instance not found
      */
-    public Instance describeInstance(String instanceId) {
+    private Instance describeInstance(String instanceId) {
         Instance instance = null;
         for (Instance i : describeInstances(instanceId)) {
             if (instance != null) {
@@ -936,8 +951,11 @@ public class AWSClient implements CloudClient {
         Utils utils = computeService.getContext().utils();
         SshClient ssh = utils.sshForNode().apply(node);
 
-        ssh.connect();
-
+        if (ssh == null) {
+            LOGGER.warn("Failed to build SshClient. Check your credentials");
+        } else {
+            ssh.connect();
+        }
         return ssh;
     }
 
@@ -962,8 +980,7 @@ public class AWSClient implements CloudClient {
             }
             throw new IllegalStateException("Unable to find node using jclouds: " + jcloudsId);
         }
-        NodeMetadata node = Iterables.getOnlyElement(nodes);
-        return node;
+        return Iterables.getOnlyElement(nodes);
     }
 
     /** {@inheritDoc} */
@@ -994,7 +1011,7 @@ public class AWSClient implements CloudClient {
      *            instance we're checking
      * @return vpc id, or null if not a vpc instance
      */
-    String getVpcId(String instanceId) {
+    private String getVpcId(String instanceId) {
         Instance awsInstance = describeInstance(instanceId);
 
         String vpcId = awsInstance.getVpcId();

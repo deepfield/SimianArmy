@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Guice;
@@ -73,7 +74,7 @@ public class BasicConformityMonkeyContext extends BasicSimianArmyContext impleme
 
     private final ClusterCrawler clusterCrawler;
 
-    private final AmazonSimpleEmailServiceClient sesClient;
+    private final AmazonSimpleEmailService sesClient;
 
     private final ConformityEmailBuilder conformityEmailBuilder;
 
@@ -179,7 +180,7 @@ public class BasicConformityMonkeyContext extends BasicSimianArmyContext impleme
         regionToAwsClient.put(region(), awsClient());
 
         clusterCrawler = new AWSClusterCrawler(regionToAwsClient, configuration());
-        sesClient = new AmazonSimpleEmailServiceClient();
+        sesClient = AmazonSimpleEmailServiceClientBuilder.defaultClient();
         if (configuration().getStr("simianarmy.aws.email.region") != null) {
           sesClient.setRegion(Region.getRegion(Regions.fromName(configuration().getStr("simianarmy.aws.email.region"))));
         }        
@@ -194,7 +195,7 @@ public class BasicConformityMonkeyContext extends BasicSimianArmyContext impleme
     public ConformityEmailNotifier.Context getConformityEmailNotifierContext() {
         return new ConformityEmailNotifier.Context() {
             @Override
-            public AmazonSimpleEmailServiceClient sesClient() {
+            public AmazonSimpleEmailService sesClient() {
                 return sesClient;
             }
 

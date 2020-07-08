@@ -19,7 +19,8 @@ package com.netflix.simianarmy.basic.janitor;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.netflix.discovery.DiscoveryClient;
@@ -72,7 +73,7 @@ public class BasicJanitorMonkeyContext extends BasicSimianArmyContext implements
 
     private final MonkeyCalendar monkeyCalendar;
 
-    private final AmazonSimpleEmailServiceClient sesClient;
+    private final AmazonSimpleEmailService sesClient;
 
     private final JanitorEmailBuilder janitorEmailBuilder;
 
@@ -114,7 +115,7 @@ public class BasicJanitorMonkeyContext extends BasicSimianArmyContext implements
         }
 
         janitorEmailBuilder = new BasicJanitorEmailBuilder();
-        sesClient = new AmazonSimpleEmailServiceClient();
+        sesClient = AmazonSimpleEmailServiceClientBuilder.defaultClient();
         if (configuration().getStr("simianarmy.aws.email.region") != null) {
            sesClient.setRegion(Region.getRegion(Regions.fromName(configuration().getStr("simianarmy.aws.email.region"))));
         }
@@ -470,7 +471,7 @@ public class BasicJanitorMonkeyContext extends BasicSimianArmyContext implements
     public JanitorEmailNotifier.Context getJanitorEmailNotifierContext() {
         return new JanitorEmailNotifier.Context() {
             @Override
-            public AmazonSimpleEmailServiceClient sesClient() {
+            public AmazonSimpleEmailService sesClient() {
                 return sesClient;
             }
 

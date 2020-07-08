@@ -17,7 +17,7 @@
  */
 package com.netflix.simianarmy.janitor;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.netflix.simianarmy.MonkeyCalendar;
 import com.netflix.simianarmy.Resource;
 import com.netflix.simianarmy.Resource.CleanupState;
@@ -28,13 +28,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /** The email notifier implemented for Janitor Monkey. */
 public class JanitorEmailNotifier extends AWSEmailNotifier {
@@ -58,7 +52,7 @@ public class JanitorEmailNotifier extends AWSEmailNotifier {
     private final String sourceEmail;
     private final String ownerEmailDomain;
     private final Map<String, Collection<Resource>> invalidEmailToResources =
-            new HashMap<String, Collection<Resource>>();
+            new HashMap<>();
 
     /**
      * The Interface Context.
@@ -68,7 +62,7 @@ public class JanitorEmailNotifier extends AWSEmailNotifier {
          * Gets the Amazon Simple Email Service client.
          * @return the Amazon Simple Email Service client
          */
-        AmazonSimpleEmailServiceClient sesClient();
+        AmazonSimpleEmailService sesClient();
 
         /**
          * Gets the source email the notifier uses to send email.
@@ -132,12 +126,10 @@ public class JanitorEmailNotifier extends AWSEmailNotifier {
         this.resourceTracker = ctx.resourceTracker();
         this.emailBuilder = ctx.emailBuilder();
         this.calendar = ctx.calendar();
-        this.ccEmails = new ArrayList<String>();
+        this.ccEmails = new ArrayList<>();
         String[] ctxCCs = ctx.ccEmails();
         if (ctxCCs != null) {
-            for (String ccEmail : ctxCCs) {
-                this.ccEmails.add(ccEmail);
-            }
+            this.ccEmails.addAll(Arrays.asList(ctxCCs));
         }
         this.sourceEmail = ctx.sourceEmail();
         this.ownerEmailDomain = ctx.ownerEmailDomain();
@@ -150,7 +142,7 @@ public class JanitorEmailNotifier extends AWSEmailNotifier {
      */
     public void sendNotifications() {
         validateEmails();
-        Map<String, Collection<Resource>> emailToResources = new HashMap<String, Collection<Resource>>();
+        Map<String, Collection<Resource>> emailToResources = new HashMap<>();
         invalidEmailToResources.clear();
         for (Resource r : getMarkedResources()) {
             if (r.isOptOutOfJanitor()) {
@@ -205,7 +197,7 @@ public class JanitorEmailNotifier extends AWSEmailNotifier {
      * Gets the marked resources for notification. Allow overriding in subclasses.
      * @return the marked resources
      */
-    protected Collection<Resource> getMarkedResources() {
+    private Collection<Resource> getMarkedResources() {
         return resourceTracker.getResources(null, CleanupState.MARKED, region);
     }
 
@@ -231,7 +223,7 @@ public class JanitorEmailNotifier extends AWSEmailNotifier {
      * @param resource the resource
      * @return true if it is OK to send notification now, otherwise false.
      */
-    protected boolean canNotify(Resource resource) {
+    private boolean canNotify(Resource resource) {
         Validate.notNull(resource);
         if (resource.getState() != CleanupState.MARKED || resource.isOptOutOfJanitor()) {
             return false;

@@ -17,9 +17,7 @@
  */
 package com.netflix.simianarmy.vlabs;
 
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.netflix.simianarmy.MonkeyConfiguration;
 import com.netflix.simianarmy.basic.BasicSimianArmyContext;
 import com.netflix.simianarmy.basic.chaos.BasicChaosEmailNotifier;
@@ -29,6 +27,8 @@ import com.netflix.simianarmy.chaos.ChaosEmailNotifier;
 import com.netflix.simianarmy.chaos.ChaosInstanceSelector;
 import com.netflix.simianarmy.chaos.ChaosMonkey;
 import com.netflix.simianarmy.client.aws.chaos.VlabChaosCrawler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class BasicContext. This provide the basic context needed for the Chaos Monkey to run. It will configure
@@ -36,6 +36,9 @@ import com.netflix.simianarmy.client.aws.chaos.VlabChaosCrawler;
  * overridden with -Dsimianarmy.properties=/path/to/my.properties
  */
 public class VlabsChaosMonkeyContext extends BasicSimianArmyContext implements ChaosMonkey.Context {
+
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(VlabsChaosMonkeyContext.class);
 
     /** The crawler. */
     private ChaosCrawler crawler;
@@ -56,11 +59,18 @@ public class VlabsChaosMonkeyContext extends BasicSimianArmyContext implements C
         VlabChaosCrawler chaosCrawler = new VlabChaosCrawler(awsClient());
         setChaosCrawler(chaosCrawler);
         setChaosInstanceSelector(new BasicChaosInstanceSelector());
-        AmazonSimpleEmailServiceClient sesClient = new AmazonSimpleEmailServiceClient(awsClientConfig);
+        AmazonSimpleEmailServiceClientBuilder sesClientBuilder = AmazonSimpleEmailServiceClientBuilder.standard().withClientConfiguration(awsClientConfig);
         if (configuration().getStr("simianarmy.aws.email.region") != null) {
-            sesClient.setRegion(Region.getRegion(Regions.fromName(configuration().getStr("simianarmy.aws.email.region"))));
+            sesClientBuilder.withRegion(configuration().getStr("simianarmy.aws.email.region"));
         }
-        setChaosEmailNotifier(new BasicChaosEmailNotifier(cfg, sesClient, null));
+
+        if (cfg.getStr("simianarmy.client.aws.region").equals("us-east-1")) {
+            String msg = "Region property simianarmy.client.aws.region cannot be set to us-east-1";
+            LOGGER.error(msg);
+            throw new RuntimeException(msg);
+        }
+
+        setChaosEmailNotifier(new BasicChaosEmailNotifier(cfg, sesClientBuilder.build(), null));
     }
 
     /** {@inheritDoc} */
@@ -75,7 +85,7 @@ public class VlabsChaosMonkeyContext extends BasicSimianArmyContext implements C
      * @param chaosCrawler
      *            the new chaos crawler
      */
-    protected void setChaosCrawler(ChaosCrawler chaosCrawler) {
+    private void setChaosCrawler(ChaosCrawler chaosCrawler) {
         this.crawler = chaosCrawler;
     }
 
@@ -91,7 +101,7 @@ public class VlabsChaosMonkeyContext extends BasicSimianArmyContext implements C
      * @param chaosInstanceSelector
      *            the new chaos instance selector
      */
-    protected void setChaosInstanceSelector(ChaosInstanceSelector chaosInstanceSelector) {
+    private void setChaosInstanceSelector(ChaosInstanceSelector chaosInstanceSelector) {
         this.selector = chaosInstanceSelector;
     }
 
@@ -106,7 +116,7 @@ public class VlabsChaosMonkeyContext extends BasicSimianArmyContext implements C
      * @param notifier
      *            the chaos email notifier
      */
-    protected void setChaosEmailNotifier(ChaosEmailNotifier notifier) {
+    private void setChaosEmailNotifier(ChaosEmailNotifier notifier) {
         this.chaosEmailNotifier = notifier;
     }
 }
