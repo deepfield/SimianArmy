@@ -18,7 +18,7 @@
 // CHECKSTYLE IGNORE Javadoc
 package com.netflix.simianarmy.client.aws;
 
-import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
+import com.amazonaws.services.autoscaling.AmazonAutoScaling;
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsRequest;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsResult;
@@ -49,9 +49,9 @@ public class TestAWSClient extends AWSClient {
         return ec2Mock;
     }
 
-    private AmazonAutoScalingClient asgMock = mock(AmazonAutoScalingClient.class);
+    private AmazonAutoScaling asgMock = mock(AmazonAutoScaling.class);
 
-    protected AmazonAutoScalingClient asgClient() {
+    protected AmazonAutoScaling asgClient() {
         return asgMock;
     }
 
@@ -59,7 +59,7 @@ public class TestAWSClient extends AWSClient {
         return super.ec2Client();
     }
 
-    protected AmazonAutoScalingClient superAsgClient() {
+    protected AmazonAutoScaling superAsgClient() {
         return super.asgClient();
     }
 
