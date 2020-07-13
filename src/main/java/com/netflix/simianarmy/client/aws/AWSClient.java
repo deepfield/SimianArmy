@@ -501,7 +501,7 @@ public class AWSClient implements CloudClient {
 
 
     /**
-     * Describe a set of vlabs instances
+     * Describe a set of instance_group instances
      *
      * @param virtualLabName the virtual lab name to search for
      * @return the instances

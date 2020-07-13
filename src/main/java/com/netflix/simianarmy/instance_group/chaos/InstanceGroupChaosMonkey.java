@@ -15,13 +15,13 @@
  *     limitations under the License.
  *
  */
-package com.netflix.simianarmy.vlabs.chaos;
+package com.netflix.simianarmy.instance_group.chaos;
 
 import com.google.common.collect.Lists;
 import com.netflix.simianarmy.*;
 import com.netflix.simianarmy.basic.chaos.BasicChaosMonkey;
 import com.netflix.simianarmy.chaos.*;
-import com.netflix.simianarmy.vlabs.VlabsChaosMonkeyContext;
+import com.netflix.simianarmy.instance_group.InstanceGroupChaosMonkeyContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +31,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * The Class BasicChaosMonkey.
  */
-public class VlabsChaosMonkey extends BasicChaosMonkey {
+public class InstanceGroupChaosMonkey extends BasicChaosMonkey {
 
     /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(VlabsChaosMonkey.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceGroupChaosMonkey.class);
 
     /** The Constant NS. */
     private static final String NS = "simianarmy.chaos.";
@@ -61,7 +61,7 @@ public class VlabsChaosMonkey extends BasicChaosMonkey {
      * @param ctx
      *            the ctx
      */
-    public VlabsChaosMonkey(VlabsChaosMonkeyContext ctx) {
+    public InstanceGroupChaosMonkey(InstanceGroupChaosMonkeyContext ctx) {
         super(ctx);
 
         this.cfg = ctx.configuration();
@@ -103,7 +103,7 @@ public class VlabsChaosMonkey extends BasicChaosMonkey {
     public void doMonkeyBusiness() {
         context().resetEventReport();
         cfg.reload();
-        String[] vLabsNames = this.cfg.getStr(NS + "vlabs.name").split(",");
+        String[] vLabsNames = this.cfg.getStr(NS + "instance_group.name").split(",");
         if (!isChaosMonkeyEnabled()) {
             return;
         }
