@@ -115,10 +115,11 @@ public class BasicJanitorMonkeyContext extends BasicSimianArmyContext implements
         }
 
         janitorEmailBuilder = new BasicJanitorEmailBuilder();
-        sesClient = AmazonSimpleEmailServiceClientBuilder.defaultClient();
+        AmazonSimpleEmailServiceClientBuilder sesClientBuilder = AmazonSimpleEmailServiceClientBuilder.standard();
         if (configuration().getStr("simianarmy.aws.email.region") != null) {
-           sesClient.setRegion(Region.getRegion(Regions.fromName(configuration().getStr("simianarmy.aws.email.region"))));
+           sesClientBuilder.withRegion(configuration().getStr("simianarmy.aws.email.region"));
         }
+        sesClient = sesClientBuilder.build();
         defaultEmail = configuration().getStrOrElse("simianarmy.janitor.notification.defaultEmail", "");
         ccEmails = StringUtils.split(
                 configuration().getStrOrElse("simianarmy.janitor.notification.ccEmails", ""), ",");

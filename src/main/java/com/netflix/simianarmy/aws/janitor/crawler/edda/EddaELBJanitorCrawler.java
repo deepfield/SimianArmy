@@ -29,8 +29,6 @@ import com.netflix.simianarmy.janitor.JanitorCrawler;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.codehaus.jackson.JsonNode;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +47,6 @@ public class EddaELBJanitorCrawler implements JanitorCrawler {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(EddaELBJanitorCrawler.class);
-
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
 
     private final EddaClient eddaClient;
     private final List<String> regions = Lists.newArrayList();

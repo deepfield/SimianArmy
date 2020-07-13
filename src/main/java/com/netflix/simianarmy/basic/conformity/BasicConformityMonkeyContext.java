@@ -24,8 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.google.common.collect.Lists;
@@ -180,10 +178,11 @@ public class BasicConformityMonkeyContext extends BasicSimianArmyContext impleme
         regionToAwsClient.put(region(), awsClient());
 
         clusterCrawler = new AWSClusterCrawler(regionToAwsClient, configuration());
-        sesClient = AmazonSimpleEmailServiceClientBuilder.defaultClient();
+        AmazonSimpleEmailServiceClientBuilder sesClientBuilder = AmazonSimpleEmailServiceClientBuilder.standard();
         if (configuration().getStr("simianarmy.aws.email.region") != null) {
-          sesClient.setRegion(Region.getRegion(Regions.fromName(configuration().getStr("simianarmy.aws.email.region"))));
-        }        
+          sesClientBuilder.withRegion(configuration().getStr("simianarmy.aws.email.region"));
+        }
+        sesClient = sesClientBuilder.build();
         defaultEmail = configuration().getStrOrElse("simianarmy.conformity.notification.defaultEmail", null);
         ccEmails = StringUtils.split(
                 configuration().getStrOrElse("simianarmy.conformity.notification.ccEmails", ""), ",");
