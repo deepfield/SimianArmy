@@ -96,6 +96,10 @@ public class InstanceGroupChaosCrawler implements ChaosCrawler {
 
         instanceGroup = new EC2InstanceGroup(name, Types.INSTANCE, awsClient.region(), tags);
 
+        for (Instance instance : vlabsInstances) {
+            instanceGroup.addInstance(instance.getInstanceId());
+        }
+
         return instanceGroup;
     }
 }

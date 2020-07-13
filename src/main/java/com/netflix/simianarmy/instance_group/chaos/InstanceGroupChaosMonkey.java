@@ -103,7 +103,7 @@ public class InstanceGroupChaosMonkey extends BasicChaosMonkey {
     public void doMonkeyBusiness() {
         context().resetEventReport();
         cfg.reload();
-        String[] vLabsNames = this.cfg.getStr(NS + "instance_group.name").split(",");
+        String[] vLabsNames = this.cfg.getStr(NS + "vlabs.name").split(",");
         if (!isChaosMonkeyEnabled()) {
             return;
         }

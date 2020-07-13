@@ -907,25 +907,28 @@ public class AWSClient implements CloudClient {
         if (jcloudsComputeService == null) {
             synchronized(this) {
                 if (jcloudsComputeService == null) {
-		    AWSCredentials awsCredentials = awsCredentialsProvider.getCredentials();
-		    String username = awsCredentials.getAWSAccessKeyId();
-		    String password = awsCredentials.getAWSSecretKey();
+                    AWSCredentials awsCredentials = awsCredentialsProvider.getCredentials();
+                    String username = awsCredentials.getAWSAccessKeyId();
+                    String password = awsCredentials.getAWSSecretKey();
+                    Credentials credentials;
 
-		    Credentials credentials;
-		    if (awsCredentials instanceof AWSSessionCredentials) {
-			AWSSessionCredentials awsSessionCredentials = (AWSSessionCredentials) awsCredentials;
-			credentials = SessionCredentials.builder().accessKeyId(username).secretAccessKey(password)
-				.sessionToken(awsSessionCredentials.getSessionToken()).build();
-		    } else {
-			credentials = new Credentials(username, password);
-		    }
+                    if (awsCredentials instanceof AWSSessionCredentials) {
+                        AWSSessionCredentials awsSessionCredentials = (AWSSessionCredentials) awsCredentials;
+                        credentials = SessionCredentials.builder().accessKeyId(username).secretAccessKey(password)
+                            .sessionToken(awsSessionCredentials.getSessionToken()).build();
+                    } else {
+                        credentials = new Credentials(username, password);
+                    }
+                    try {
+                        ComputeServiceContext jcloudsContext = ContextBuilder.newBuilder("aws-ec2")
+                            .credentialsSupplier(Suppliers.ofInstance(credentials))
+                            .modules(ImmutableSet.<Module>of(new SLF4JLoggingModule(), new JschSshClientModule()))
+                            .buildView(ComputeServiceContext.class);
 
-		    ComputeServiceContext jcloudsContext = ContextBuilder.newBuilder("aws-ec2")
-			    .credentialsSupplier(Suppliers.ofInstance(credentials))
-			    .modules(ImmutableSet.<Module>of(new SLF4JLoggingModule(), new JschSshClientModule()))
-			    .buildView(ComputeServiceContext.class);
-
-                    this.jcloudsComputeService = jcloudsContext.getComputeService();
+                        this.jcloudsComputeService = jcloudsContext.getComputeService();
+                    } catch (Exception e) {
+                        LOGGER.warn("Unable to create ComputeServiceContext", e);
+                    }
                 }
             }
         }

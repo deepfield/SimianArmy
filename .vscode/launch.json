@@ -4,9 +4,8 @@
         {
             "type": "java",
             "name": "Debug",
-            "request": "attach",
-            "hostName": "localhost",
-            "port": 5005
+            "request": "launch",
+            "mainClass": "com.netflix.simianarmy.Main"
         }
     ]
 }

@@ -2,13 +2,11 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "gradle",
+            "label": "gradleJettyRun",
             "type": "shell",
             "command": "./gradlew",
             "args": [
-                "jettyRun",
-                "-Dspring.profiles.active=local",
-                "--debug-jvm"
+                "jettyRun"
             ],
             "dependsOn": [
                 "kill-java"

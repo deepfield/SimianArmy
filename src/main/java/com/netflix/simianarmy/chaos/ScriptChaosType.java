@@ -62,6 +62,7 @@ public abstract class ScriptChaosType extends ChaosType {
             return false;
         }
 
+        LOGGER.info("Applying ssh chaos type");
         return super.canApply(instance);
     }
 

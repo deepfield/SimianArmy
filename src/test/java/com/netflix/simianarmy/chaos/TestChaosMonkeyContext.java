@@ -346,6 +346,11 @@ public class TestChaosMonkeyContext extends TestMonkeyContext implements ChaosMo
         }
 
         @Override
+        public boolean isConnected() {
+            return true;
+        }
+
+        @Override
         public String getUsername() {
             return credentials.getUser();
         }
