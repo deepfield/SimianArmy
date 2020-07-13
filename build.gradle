@@ -1,14 +1,10 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
+plugins {
+    id 'war'
+    id "org.gretty" version "3.0.3"
 }
 
-plugins {
-    // id 'nebula.netflixoss' version '4.1.0'
-    id "com.jfrog.artifactory" version "4.4.18"
-    id 'net.saliman.cobertura' version '2.2.7'
-    id 'com.github.hierynomus.license' version '0.11.0'
+repositories {
+    jcenter()
 }
 
 // Establish version and status
@@ -20,10 +16,6 @@ repositories {
     mavenLocal()
     mavenCentral()
 }
-
-apply plugin: 'war'
-apply plugin: 'maven-publish'
-apply plugin: "com.jfrog.artifactory"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -69,26 +61,7 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint"
 }
 
-license {
-    exclude '**/*.properties'
-    exclude '**/*.json'
-    exclude '**/*.sh'
-}
-
 task coreJar(type: Jar) {
     from sourceSets.main.output
     include '**'
-}
-
-publishing {
-    publications {
-        mavenWar(MavenPublication) {
-            from components.web
-            artifact coreJar { classifier "core" }
-        }
-    }
-}
-
-artifactoryPublish {
-    publications('mavenWar')
 }
