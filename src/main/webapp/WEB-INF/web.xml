@@ -4,7 +4,7 @@
     <display-name>Simian Army</display-name>
     <servlet>
         <servlet-name>Vlabs Monkey Server</servlet-name>
-        <servlet-class>com.netflix.simianarmy.vlabs.VlabsMonkeyServer</servlet-class>
+        <servlet-class>com.netflix.simianarmy.instance_group.InstanceGroupMonkeyServer</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>

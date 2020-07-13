@@ -2,24 +2,26 @@ package com.netflix.simianarmy.client.aws.chaos;
 
 
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.GroupType;
 import com.netflix.simianarmy.chaos.ChaosCrawler;
 import com.netflix.simianarmy.client.aws.AWSClient;
-import com.netflix.simianarmy.vlabs.chaos.VlabsInstanceGroup;
+import com.netflix.simianarmy.instance_group.chaos.EC2InstanceGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
 
 /**
- * The Class VlabChaosCrawler. This will crawl for all available EC2 Instance associated with a DeepField VLab name.
+ * The Class InstanceGroupChaosCrawler. This will crawl for all available EC2 Instance associated with a DeepField VLab name.
  */
-public class VlabChaosCrawler implements ChaosCrawler {
+public class InstanceGroupChaosCrawler implements ChaosCrawler {
 
     /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(VlabChaosCrawler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InstanceGroupChaosCrawler.class);
 
     /**
      * The key of the tag that set the aggression coefficient
@@ -39,12 +41,12 @@ public class VlabChaosCrawler implements ChaosCrawler {
     private final AWSClient awsClient;
 
     /**
-     * Instantiates a new vlabs chaos crawler.
+     * Instantiates a new instance_group chaos crawler.
      *
      * @param awsClient
      *            the aws client
      */
-    public VlabChaosCrawler(AWSClient awsClient) {
+    public InstanceGroupChaosCrawler(AWSClient awsClient) {
         this.awsClient = awsClient;
     }
 
@@ -68,7 +70,7 @@ public class VlabChaosCrawler implements ChaosCrawler {
             for (String name : names) {
                 List<Instance> instances = awsClient.describeVlabsCluster(name);
 
-                list.add(getVlabInstanceGroup(name, instances));
+                list.add(getEC2InstanceGroup(name, instances));
 
             }
         } else {
@@ -85,16 +87,14 @@ public class VlabChaosCrawler implements ChaosCrawler {
      * @param vlabsInstances The vlab instances in the group
      * @return The appropriate {@link InstanceGroup}
      */
-    protected InstanceGroup getVlabInstanceGroup(String name, List<Instance> vlabsInstances) {
+    private InstanceGroup getEC2InstanceGroup(String name, List<Instance> vlabsInstances) {
         InstanceGroup instanceGroup;
 
-        List<String> instanceIds = new LinkedList<>();
+        TagDescription tag = new TagDescription().withKey("vlabs-name").withValue(name);
+        List<TagDescription> tags = new LinkedList<>();
+        tags.add(tag);
 
-        for (Instance i : vlabsInstances) {
-            instanceIds.add(i.getInstanceId());
-        }
-
-        instanceGroup = new VlabsInstanceGroup(name, Types.INSTANCE, awsClient.region(), instanceIds);
+        instanceGroup = new EC2InstanceGroup(name, Types.INSTANCE, awsClient.region(), tags);
 
         return instanceGroup;
     }
