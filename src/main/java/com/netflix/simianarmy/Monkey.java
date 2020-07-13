@@ -132,6 +132,8 @@ public abstract class Monkey {
             LOGGER.info(this.type().name() + " Monkey Running ...");
             try {
                 this.doMonkeyBusiness();
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage());
             } finally {
                 String eventReport = context().getEventReport();
                 if (eventReport != null) {

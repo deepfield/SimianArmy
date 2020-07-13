@@ -43,8 +43,6 @@ public class TestBasicJanitorMonkeyContext {
     private static final Set<String> SIMIANARMY_JANITOR_RULE_UNTAGGEDRULE_REQUIREDTAGS = new HashSet<String>(Arrays.asList("owner", "costcenter"));
     
     private static final String SIMIANARMY_JANITOR_RULE_UNTAGGEDRULE_RESOURCES = "Instance";
-    
-    private String monkeyRegion;
 
     private TestBasicCalendar monkeyCalendar;
 
@@ -54,7 +52,6 @@ public class TestBasicJanitorMonkeyContext {
     
     @BeforeMethod
     public void before() {
-        monkeyRegion = "us-east-1";
         monkeyCalendar = new TestBasicCalendar();
     }
     

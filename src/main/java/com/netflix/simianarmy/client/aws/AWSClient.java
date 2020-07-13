@@ -65,9 +65,9 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
+import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.ssh.SshClient;
-import org.jclouds.ssh.jsch.config.JschSshClientModule;
+import org.jclouds.sshj.config.SshjSshClientModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -922,17 +922,16 @@ public class AWSClient implements CloudClient {
                     try {
                         ComputeServiceContext jcloudsContext = ContextBuilder.newBuilder("aws-ec2")
                             .credentialsSupplier(Suppliers.ofInstance(credentials))
-                            .modules(ImmutableSet.<Module>of(new SLF4JLoggingModule(), new JschSshClientModule()))
+                            .modules(ImmutableSet.<Module> of(new Log4JLoggingModule(), new SshjSshClientModule()))
                             .buildView(ComputeServiceContext.class);
 
                         this.jcloudsComputeService = jcloudsContext.getComputeService();
                     } catch (Exception e) {
-                        LOGGER.warn("Unable to create ComputeServiceContext", e);
+                        LOGGER.warn("Unable to create ComputeServiceContext" + e.getMessage());
                     }
                 }
             }
         }
-
         return jcloudsComputeService;
     }
 

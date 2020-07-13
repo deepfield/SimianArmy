@@ -110,6 +110,11 @@ public abstract class MonkeyRestClient {
     public abstract String getBaseUrl(String region);
 
     public static class DataReadException extends RuntimeException {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 8247941808577212949L;
+
         public DataReadException(int code, String url, String jsonContent) {
             super(String.format("Response code %d from url %s: %s", code, url, jsonContent));
         }

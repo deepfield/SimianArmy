@@ -215,7 +215,10 @@ public class TestChaosMonkeyResource {
 
     String getResource(String name) {
         // get resource as stream, use Scanner to read stream as one token
-        return new Scanner(TestChaosMonkeyResource.class.getResourceAsStream(name), "UTF-8").useDelimiter("\\A").next();
+        Scanner scanner = new Scanner(TestChaosMonkeyResource.class.getResourceAsStream(name), "UTF-8");
+        String resource = scanner.useDelimiter("\\A").next();
+        scanner.close();
+        return resource;
     }
 
     private void validateAddEventResult(ChaosMonkeyResource resource, String input, Response.Status responseStatus) {

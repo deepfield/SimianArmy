@@ -88,7 +88,6 @@ public class TestBasicJanitorRuleEngine {
 
     @Test void testWithExclusionRuleMatch2() {
         Resource resource = new AWSResource().withId("id");
-        DateTime now = DateTime.now();
         BasicJanitorRuleEngine engine = new BasicJanitorRuleEngine()
                 .addExclusionRule(new AlwaysValidRule())
                 .addRule(new AlwaysValidRule());

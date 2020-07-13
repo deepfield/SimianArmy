@@ -5,6 +5,7 @@
             "type": "java",
             "name": "Debug",
             "request": "launch",
+            "args": "-Dorg.gradle.warning.mode=all",
             "mainClass": "com.netflix.simianarmy.Main"
         }
     ]

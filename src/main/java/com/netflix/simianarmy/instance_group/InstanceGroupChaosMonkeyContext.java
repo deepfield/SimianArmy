@@ -49,26 +49,32 @@ public class InstanceGroupChaosMonkeyContext extends BasicSimianArmyContext impl
     /** The chaos email notifier. */
     private ChaosEmailNotifier chaosEmailNotifier;
 
+    private static final String DEFAULT_REGION = "us-east-2";
+
     /**
      * Instantiates a new basic context.
      */
-    public InstanceGroupChaosMonkeyContext() {
+    public InstanceGroupChaosMonkeyContext() throws RuntimeException {
         super("simianarmy.properties", "client.properties", "chaos.properties");
         MonkeyConfiguration cfg = configuration();
 
         InstanceGroupChaosCrawler chaosCrawler = new InstanceGroupChaosCrawler(awsClient());
         setChaosCrawler(chaosCrawler);
         setChaosInstanceSelector(new BasicChaosInstanceSelector());
-        AmazonSimpleEmailServiceClientBuilder sesClientBuilder = AmazonSimpleEmailServiceClientBuilder.standard().withClientConfiguration(awsClientConfig);
-        if (configuration().getStr("simianarmy.aws.email.region") != null) {
+        AmazonSimpleEmailServiceClientBuilder sesClientBuilder = AmazonSimpleEmailServiceClientBuilder
+            .standard()
+            .withClientConfiguration(awsClientConfig);
+        if (cfg.getStr("simianarmy.client.aws.region") == null) {
+            LOGGER.info("Using default region " + DEFAULT_REGION);
+            sesClientBuilder.withRegion(DEFAULT_REGION);
+        } else if (cfg.getStr("simianarmy.client.aws.region").equals("us-east-1")) {
+            String msg = "Region property simianarmy.client.aws.region cannot be set to us-east-1.\n" +
+                "Change this property in client.properties";
+            LOGGER.error(msg);
+            throw new RuntimeException(msg);
+        } else {
             sesClientBuilder.withRegion(configuration().getStr("simianarmy.aws.email.region"));
         }
-
-       if (cfg.getStr("simianarmy.client.aws.region").equals("us-east-1")) {
-           String msg = "Region property simianarmy.client.aws.region cannot be set to us-east-1";
-           LOGGER.error(msg);
-           throw new RuntimeException(msg);
-       }
 
         setChaosEmailNotifier(new BasicChaosEmailNotifier(cfg, sesClientBuilder.build(), null));
     }
