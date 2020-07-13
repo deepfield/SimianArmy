@@ -46,6 +46,7 @@ public class LaunchConfigJanitorCrawler extends AbstractAWSJanitorCrawler {
     public static final String LAUNCH_CONFIG_FIELD_USED_BY_ASG = "USED_BY_ASG";
 
     /** The Constant LOGGER. */
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(LaunchConfigJanitorCrawler.class);
 
     /**

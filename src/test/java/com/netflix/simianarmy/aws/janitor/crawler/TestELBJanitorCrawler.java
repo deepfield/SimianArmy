@@ -168,7 +168,9 @@ public class TestELBJanitorCrawler {
         if (includeInstances) {
             List<Instance> instances = new LinkedList<>();
             Instance i1 = new Instance().withInstanceId("i-000001");
+            instances.add(i1);
             Instance i2 = new Instance().withInstanceId("i-000002");
+            instances.add(i2);
             elb.setInstances(instances);
         }
         return elb;

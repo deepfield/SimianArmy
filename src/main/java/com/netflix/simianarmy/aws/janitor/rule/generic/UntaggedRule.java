@@ -21,7 +21,6 @@ package com.netflix.simianarmy.aws.janitor.rule.generic;
 import java.util.Date;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -40,8 +39,6 @@ public class UntaggedRule implements Rule {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(UntaggedRule.class);
-
-    private static final String TERMINATION_REASON = "This resource is missing the required tags";
 
     private final MonkeyCalendar calendar;
 

@@ -43,11 +43,13 @@ public class TestASGOwnerEmailTag {
     private static final String ASG2 = "asg2";
     private static final String OWNER_TAG_KEY = "owner";
     private static final String OWNER_TAG_VALUE = "tyler@paperstreet.com";
+    @SuppressWarnings("unused")
     private static final String REGION = "eu-west-1";
 
     @Test
     public void testForOwnerTag() {
         Properties properties = new Properties();
+        @SuppressWarnings("unused")
         BasicConformityMonkeyContext ctx = new BasicConformityMonkeyContext();
 
         List<AutoScalingGroup> asgList = createASGList();

@@ -649,7 +649,7 @@ public class AWSClient implements CloudClient {
                 ChangeBatch recordChangeBatch = new ChangeBatch(changeList);
 
                 ChangeResourceRecordSetsRequest request = new ChangeResourceRecordSetsRequest(hostedZoneID, recordChangeBatch);
-                ChangeResourceRecordSetsResult result = route53Client.changeResourceRecordSets(request);
+                route53Client.changeResourceRecordSets(request);
             }
         } else {
             LOGGER.error("dnsType must be one of 'A', 'AAAA', or 'CNAME'");

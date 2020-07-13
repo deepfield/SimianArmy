@@ -18,7 +18,6 @@
 
 package com.netflix.simianarmy.aws.janitor.crawler.edda;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;

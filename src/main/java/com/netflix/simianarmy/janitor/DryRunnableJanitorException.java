@@ -19,6 +19,11 @@
 package com.netflix.simianarmy.janitor;
 
 public class DryRunnableJanitorException extends Exception {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -9202940691108288499L;
+
     public DryRunnableJanitorException(String message) {
         super(message);
     }

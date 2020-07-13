@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * and the expected termination date is passed, the janitor removes the resources from the
  * cloud.
  */
-public abstract class AbstractJanitor implements Janitor, DryRunnableJanitor {
+public abstract class AbstractJanitor implements DryRunnableJanitor {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJanitor.class);

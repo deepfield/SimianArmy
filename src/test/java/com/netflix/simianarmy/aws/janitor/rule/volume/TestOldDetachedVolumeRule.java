@@ -38,8 +38,6 @@ import com.netflix.simianarmy.aws.janitor.VolumeTaggingMonkey;
 import com.netflix.simianarmy.aws.janitor.rule.TestMonkeyCalendar;
 import com.netflix.simianarmy.janitor.JanitorMonkey;
 
-import static org.joda.time.DateTimeConstants.MILLIS_PER_DAY;
-
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -272,20 +270,4 @@ public class TestOldDetachedVolumeRule {
     public void testNullCalendar() {
         new OldDetachedVolumeRule(null, 5, 4);
     }
-
-    /** Verify that a test conditioned to run across the spring DST cutover actually did
-     * cross that threshold.  The real difference will be about 0.05 days less than
-     * the retentionDays parameter.
-     * @param resource The AWS resource being tested
-     * @param retentionDays Number of days the resource should be kept around
-     * @param timeOfCheck When the check is executed
-     */
-    private void verifyDSTCutoverHappened(Resource resource, int retentionDays, DateTime timeOfCheck) {
-        double realDays = (double) (resource.getExpectedTerminationTime().getTime() - timeOfCheck.getMillis())
-            / (double) MILLIS_PER_DAY;
-        long days = (resource.getExpectedTerminationTime().getTime() - timeOfCheck.getMillis()) / MILLIS_PER_DAY;
-        Assert.assertTrue(realDays < (double) retentionDays);
-        Assert.assertNotEquals(days, retentionDays);
-    }
-
 }

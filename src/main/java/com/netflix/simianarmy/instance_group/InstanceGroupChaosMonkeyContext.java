@@ -64,11 +64,11 @@ public class InstanceGroupChaosMonkeyContext extends BasicSimianArmyContext impl
             sesClientBuilder.withRegion(configuration().getStr("simianarmy.aws.email.region"));
         }
 
-//        if (cfg.getStr("simianarmy.client.aws.region").equals("us-east-1")) {
-//            String msg = "Region property simianarmy.client.aws.region cannot be set to us-east-1";
-//            LOGGER.error(msg);
-//            throw new RuntimeException(msg);
-//        }
+       if (cfg.getStr("simianarmy.client.aws.region").equals("us-east-1")) {
+           String msg = "Region property simianarmy.client.aws.region cannot be set to us-east-1";
+           LOGGER.error(msg);
+           throw new RuntimeException(msg);
+       }
 
         setChaosEmailNotifier(new BasicChaosEmailNotifier(cfg, sesClientBuilder.build(), null));
     }

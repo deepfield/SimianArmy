@@ -24,11 +24,6 @@ public class InstanceGroupChaosCrawler implements ChaosCrawler {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstanceGroupChaosCrawler.class);
 
     /**
-     * The key of the tag that set the aggression coefficient
-     */
-    private static final String CHAOS_MONKEY_AGGRESSION_COEFFICIENT_KEY = "chaosMonkey.aggressionCoefficient";
-
-    /**
      * The group types Types.
      */
     public enum Types implements GroupType {

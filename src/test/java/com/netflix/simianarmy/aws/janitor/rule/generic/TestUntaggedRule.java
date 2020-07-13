@@ -32,7 +32,6 @@ import com.netflix.simianarmy.Resource;
 import com.netflix.simianarmy.TestUtils;
 import com.netflix.simianarmy.aws.AWSResource;
 import com.netflix.simianarmy.aws.AWSResourceType;
-import com.netflix.simianarmy.aws.janitor.crawler.InstanceJanitorCrawler;
 import com.netflix.simianarmy.aws.janitor.rule.TestMonkeyCalendar;
 
 public class TestUntaggedRule {

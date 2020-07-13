@@ -45,7 +45,6 @@ public class TestOrphanedELBRule {
 
     @Test
     public void testELBWithInstancesNoASGs() {
-        DateTime now = DateTime.now();
         Resource resource = new AWSResource().withId("test-elb").withResourceType(AWSResourceType.ELB)
                 .withOwnerEmail("owner@foo.com");
         resource.setAdditionalField("referencedASGCount", "0");
@@ -56,7 +55,6 @@ public class TestOrphanedELBRule {
 
     @Test
     public void testELBWithReferencedASGsNoInstances() {
-        DateTime now = DateTime.now();
         Resource resource = new AWSResource().withId("test-elb").withResourceType(AWSResourceType.ELB)
                 .withOwnerEmail("owner@foo.com");
         resource.setAdditionalField("referencedASGCount", "4");
@@ -67,7 +65,6 @@ public class TestOrphanedELBRule {
 
     @Test
     public void testMissingInstanceCountCheck() {
-        DateTime now = DateTime.now();
         Resource resource = new AWSResource().withId("test-elb").withResourceType(AWSResourceType.ELB)
                 .withOwnerEmail("owner@foo.com");
         resource.setAdditionalField("referencedASGCount", "0");
@@ -77,7 +74,6 @@ public class TestOrphanedELBRule {
 
     @Test
     public void testMissingReferencedASGCountCheck() {
-        DateTime now = DateTime.now();
         Resource resource = new AWSResource().withId("test-elb").withResourceType(AWSResourceType.ELB)
                 .withOwnerEmail("owner@foo.com");
         resource.setAdditionalField("instanceCount", "0");
@@ -87,7 +83,6 @@ public class TestOrphanedELBRule {
 
     @Test
     public void testMissingCountsCheck() {
-        DateTime now = DateTime.now();
         Resource resource = new AWSResource().withId("test-elb").withResourceType(AWSResourceType.ELB)
                 .withOwnerEmail("owner@foo.com");
         OrphanedELBRule rule = new OrphanedELBRule(new TestMonkeyCalendar(), 7);
@@ -96,7 +91,6 @@ public class TestOrphanedELBRule {
 
     @Test
     public void testMissingCountsCheckWithExtraFields() {
-        DateTime now = DateTime.now();
         Resource resource = new AWSResource().withId("test-elb").withResourceType(AWSResourceType.ELB)
                 .withOwnerEmail("owner@foo.com");
         resource.setAdditionalField("bogusField1", "0");
