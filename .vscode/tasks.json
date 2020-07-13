@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "gradle",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": [
+                "jettyRun",
+                "-Dspring.profiles.active=local",
+                "--debug-jvm"
+            ],
+            "dependsOn": [
+                "kill-java"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "kill-java",
+            "type": "shell",
+            "command": "pkill",
+            "args": [
+                "java"
+            ]
+        }
+    ]
+}
