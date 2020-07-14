@@ -107,7 +107,14 @@ public class BasicChaosMonkey extends ChaosMonkey {
             if (!isChaosMonkeyEnabled()) {
                 return;
             }
-            for (InstanceGroup group : context().chaosCrawler().groups()) {
+            String specificVlabs = cfg.getStrOrElse("simianarmy.chaos.vlabs.name", "");
+            List<InstanceGroup> groups;
+            if (specificVlabs.isEmpty()) {
+                groups = context().chaosCrawler().groups();
+            } else {
+                groups = context().chaosCrawler().groups(specificVlabs.split(","));
+            }
+            for (InstanceGroup group : groups) {
                 Boolean exit = monkeyBusiness(group);
                 if (exit) {
                     break;

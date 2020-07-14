@@ -18,13 +18,13 @@
 // CHECKSTYLE IGNORE Javadoc
 package com.netflix.simianarmy.basic.chaos;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
 
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.chaos.TestChaosMonkeyContext;
 import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;
 

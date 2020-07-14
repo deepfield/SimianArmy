@@ -17,7 +17,7 @@
  */
 package com.netflix.simianarmy.client.aws.chaos;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.netflix.simianarmy.chaos.ChaosCrawler;

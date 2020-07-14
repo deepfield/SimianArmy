@@ -34,9 +34,7 @@ public interface Resource {
     public enum CleanupState {
         /** The resource is marked as a cleanup candidate but has not been cleaned up yet. **/
         MARKED,
-        /** The resource is terminated by janitor monkey. **/
-        JANITOR_TERMINATED,
-        /** The resource is terminated by user before janitor monkey performs the termination. **/
+        /** The resource is terminated by user. **/
         USER_TERMINATED,
         /** The resource is unmarked and not for cleanup anymore due to some change of situations. **/
         UNMARKED
@@ -305,28 +303,6 @@ public interface Resource {
      * @return the resource object
      */
     Resource withTerminationReason(String terminationReason);
-
-    /**
-     * Gets the boolean to indicate whether or not the resource is opted out of Janitor monkey
-     * so it will not be cleaned.
-     * @return true if the resource is opted out of Janitor monkey, otherwise false
-     */
-    boolean isOptOutOfJanitor();
-
-    /**
-     * Sets the flag to indicate whether or not the resource is opted out of Janitor monkey
-     * so it will not be cleaned.
-     * @param optOutOfJanitor true if the resource is opted out of Janitor monkey, otherwise false
-     */
-    void setOptOutOfJanitor(boolean optOutOfJanitor);
-
-    /**
-     * Sets the flag to indicate whether or not the resource is opted out of Janitor monkey
-     * so it will not be cleaned and returns the resource object.
-     * @param optOutOfJanitor true if the resource is opted out of Janitor monkey, otherwise false
-     * @return the resource object
-     */
-    Resource withOptOutOfJanitor(boolean optOutOfJanitor);
 
     /**
      * Gets a map from fields of resources to corresponding values. Values are represented

@@ -34,7 +34,7 @@ import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;
 import com.netflix.simianarmy.chaos.ChaosMonkey;
 import com.netflix.simianarmy.chaos.TestChaosMonkeyContext;
 import com.netflix.simianarmy.resources.chaos.ChaosMonkeyResource;
-import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.ec2.model.TagDescription;
 
 // CHECKSTYLE IGNORE MagicNumberCheck
 public class TestBasicChaosMonkey {

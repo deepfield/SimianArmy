@@ -102,7 +102,7 @@ public class ChaosInstance {
                 client.disconnect();
                 canConnectSsh = true;
             } catch (Exception e) {
-                LOGGER.warn("Error making SSH connection to instance", e);
+                LOGGER.warn("Error making SSH connection to instance\n" + e);
                 canConnectSsh = false;
             }
         }

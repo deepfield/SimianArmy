@@ -20,7 +20,7 @@ package com.netflix.simianarmy.chaos;
 import java.util.EnumSet;
 import java.util.List;
 
-
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.GroupType;
 
 
@@ -60,7 +60,7 @@ public interface ChaosCrawler {
          *
          * @return the list of tags associated with group type
          */
-        List<com.amazonaws.services.autoscaling.model.TagDescription> tags();
+        List<TagDescription> tags();
 
         /**
          * Instances.

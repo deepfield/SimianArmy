@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The email notifier implemented for Janitor Monkey.
+ * The email notifier implemented for Conformitiy Monkey.
  */
 public class ConformityEmailNotifier  extends AWSEmailNotifier {
 

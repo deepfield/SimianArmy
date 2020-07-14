@@ -18,10 +18,10 @@
 // CHECKSTYLE IGNORE Javadoc
 package com.netflix.simianarmy.chaos;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.CloudClient;
 import com.netflix.simianarmy.GroupType;
 import com.netflix.simianarmy.MonkeyConfiguration;
