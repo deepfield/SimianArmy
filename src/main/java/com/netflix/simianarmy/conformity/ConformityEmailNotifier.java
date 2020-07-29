@@ -17,7 +17,7 @@
  */
 package com.netflix.simianarmy.conformity;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.netflix.simianarmy.aws.AWSEmailNotifier;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The email notifier implemented for Janitor Monkey.
+ * The email notifier implemented for Conformitiy Monkey.
  */
 public class ConformityEmailNotifier  extends AWSEmailNotifier {
 
@@ -58,7 +58,7 @@ public class ConformityEmailNotifier  extends AWSEmailNotifier {
          * Gets the Amazon Simple Email Service client.
          * @return the Amazon Simple Email Service client
          */
-        AmazonSimpleEmailServiceClient sesClient();
+        AmazonSimpleEmailService sesClient();
 
         /**
          * Gets the open hour the email notifications are sent.

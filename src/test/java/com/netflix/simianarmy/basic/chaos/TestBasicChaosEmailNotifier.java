@@ -28,14 +28,15 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.netflix.simianarmy.GroupType;
 import com.netflix.simianarmy.basic.BasicConfiguration;
 import com.netflix.simianarmy.chaos.TestChaosMonkeyContext.TestInstanceGroup;
 
 public class TestBasicChaosEmailNotifier {
 
-    private final AmazonSimpleEmailServiceClient sesClient = new AmazonSimpleEmailServiceClient();
+    private final AmazonSimpleEmailService sesClient = AmazonSimpleEmailServiceClientBuilder.defaultClient();
 
     private BasicChaosEmailNotifier basicChaosEmailNotifier;
 

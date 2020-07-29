@@ -20,8 +20,9 @@ package com.netflix.simianarmy.chaos;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.GroupType;
+
 
 /**
  * The Interface ChaosCrawler.
@@ -31,7 +32,7 @@ public interface ChaosCrawler {
     /**
      * The Interface InstanceGroup.
      */
-    public interface InstanceGroup {
+    interface InstanceGroup {
 
         /**
          * Type.
@@ -55,7 +56,7 @@ public interface ChaosCrawler {
         String region();
 
         /**
-         * Tags.
+         * AutoScaling Tags.
          *
          * @return the list of tags associated with group type
          */

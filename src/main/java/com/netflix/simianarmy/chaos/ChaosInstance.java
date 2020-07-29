@@ -102,7 +102,8 @@ public class ChaosInstance {
                 client.disconnect();
                 canConnectSsh = true;
             } catch (Exception e) {
-                LOGGER.warn("Error making SSH connection to instance", e);
+                LOGGER.warn("Error making SSH connection to instance");
+                LOGGER.warn("If you are trying to target a vlab you must manually add the public ssh key from the chaos monkey EC2 instance to the vlab's authorized keys file.\n" + e);
                 canConnectSsh = false;
             }
         }

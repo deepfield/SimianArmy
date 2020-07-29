@@ -20,7 +20,7 @@ package com.netflix.simianarmy.basic.chaos;
 
 import java.util.*;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.GroupType;
 import com.netflix.simianarmy.chaos.ChaosInstanceSelector;
 import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;

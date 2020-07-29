@@ -17,7 +17,7 @@
  */
 package com.netflix.simianarmy.tunable;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.GroupType;
 import com.netflix.simianarmy.basic.chaos.BasicInstanceGroup;
 

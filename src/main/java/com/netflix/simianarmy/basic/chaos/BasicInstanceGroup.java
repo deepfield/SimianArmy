@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.ec2.model.TagDescription;
 import com.netflix.simianarmy.GroupType;
 import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;
 
@@ -39,7 +39,7 @@ public class BasicInstanceGroup implements InstanceGroup {
     /** The region. */
     private final String region;
 
-    /** list of the tags of the ASG */
+    /** list of the tags of the EC2 */
     private final List<TagDescription> tags;
 
     /**
@@ -50,7 +50,7 @@ public class BasicInstanceGroup implements InstanceGroup {
      * @param type
      *            the type
      * @param tags
-     *            the ASG tags
+     *            the EC2 tags
      */
     public BasicInstanceGroup(String name, GroupType type, String region, List<TagDescription> tags) {
         this.name = name;

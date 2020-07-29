@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "gradleJettyRun",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": [
+                "jettyRun"
+            ],
+            "dependsOn": [
+                "kill-java"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "kill-java",
+            "type": "shell",
+            "command": "pkill",
+            "args": [
+                "java"
+            ]
+        }
+    ]
+}

@@ -8,7 +8,6 @@
 Army functionality has been moved to other Netflix projects:
 
 * A [newer version of Chaos Monkey](https://github.com/netflix/chaosmonkey) is available as a standalone service.
-* [Swabbie] is a new standalone service that will replace the functionality provided by Janitor Monkey.
 * Conformity Monkey functionality will be rolled into other [Spinnaker] backend services.
 
 

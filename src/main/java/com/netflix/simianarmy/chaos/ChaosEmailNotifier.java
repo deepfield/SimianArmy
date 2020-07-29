@@ -17,7 +17,7 @@
  */
 package com.netflix.simianarmy.chaos;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.netflix.simianarmy.aws.AWSEmailNotifier;
 import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;
 
@@ -32,7 +32,7 @@ public abstract class ChaosEmailNotifier extends AWSEmailNotifier {
      *
      * @param sesClient the AWS simple email service client.
      */
-    public ChaosEmailNotifier(AmazonSimpleEmailServiceClient sesClient) {
+    public ChaosEmailNotifier(AmazonSimpleEmailService sesClient) {
         super(sesClient);
     }
 

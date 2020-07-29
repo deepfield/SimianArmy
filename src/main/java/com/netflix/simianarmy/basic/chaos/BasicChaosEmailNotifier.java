@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.netflix.simianarmy.MonkeyConfiguration;
 import com.netflix.simianarmy.chaos.ChaosCrawler.InstanceGroup;
 import com.netflix.simianarmy.chaos.ChaosEmailNotifier;
@@ -50,7 +50,7 @@ public class BasicChaosEmailNotifier extends ChaosEmailNotifier {
      * owner email specified
      * @param ccAddresses the cc email addresses for notifications
      */
-    public BasicChaosEmailNotifier(MonkeyConfiguration cfg, AmazonSimpleEmailServiceClient sesClient,
+    public BasicChaosEmailNotifier(MonkeyConfiguration cfg, AmazonSimpleEmailService sesClient,
             String defaultEmail, String... ccAddresses) {
         super(sesClient);
         this.cfg = cfg;

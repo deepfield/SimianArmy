@@ -17,9 +17,8 @@
  */
 package com.netflix.simianarmy.basic;
 
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.netflix.simianarmy.MonkeyConfiguration;
 import com.netflix.simianarmy.basic.chaos.BasicChaosEmailNotifier;
 import com.netflix.simianarmy.basic.chaos.BasicChaosInstanceSelector;
@@ -27,9 +26,11 @@ import com.netflix.simianarmy.chaos.ChaosCrawler;
 import com.netflix.simianarmy.chaos.ChaosEmailNotifier;
 import com.netflix.simianarmy.chaos.ChaosInstanceSelector;
 import com.netflix.simianarmy.chaos.ChaosMonkey;
-import com.netflix.simianarmy.client.aws.chaos.ASGChaosCrawler;
+import com.netflix.simianarmy.client.aws.chaos.VlabsChaosCrawler;
 import com.netflix.simianarmy.client.aws.chaos.FilteringChaosCrawler;
 import com.netflix.simianarmy.client.aws.chaos.TagPredicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class BasicContext. This provide the basic context needed for the Chaos Monkey to run. It will configure
@@ -37,6 +38,9 @@ import com.netflix.simianarmy.client.aws.chaos.TagPredicate;
  * overridden with -Dsimianarmy.properties=/path/to/my.properties
  */
 public class BasicChaosMonkeyContext extends BasicSimianArmyContext implements ChaosMonkey.Context {
+
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(BasicChaosMonkeyContext.class);
 
     /** The crawler. */
     private ChaosCrawler crawler;
@@ -47,22 +51,40 @@ public class BasicChaosMonkeyContext extends BasicSimianArmyContext implements C
     /** The chaos email notifier. */
     private ChaosEmailNotifier chaosEmailNotifier;
 
+    private static final String DEFAULT_REGION = "us-east-2";
+
     /**
      * Instantiates a new basic context.
      */
     public BasicChaosMonkeyContext() {
         super("simianarmy.properties", "client.properties", "chaos.properties");
         MonkeyConfiguration cfg = configuration();
-        String tagKey = cfg.getStrOrElse("simianarmy.chaos.ASGtag.key", "");
-        String tagValue = cfg.getStrOrElse("simianarmy.chaos.ASGtag.value", "");
+        String tagKey = cfg.getStrOrElse("simianarmy.chaos.IGtag.key", "");
+        String tagValue = cfg.getStrOrElse("simianarmy.chaos.IGtag.value", "");
+        String specificVlabs = cfg.getStrOrElse("simianarmy.chaos.vlabs.name", "");
+        
+        if (specificVlabs.isEmpty() && tagKey.isEmpty()) {
+            String msg = "You should specify some vlabs to target. It is destructive to use chaos monkey on all vlab clusters.";
+            LOGGER.error(msg);
+            throw new RuntimeException(msg);
+        }
 
-        ASGChaosCrawler chaosCrawler = new ASGChaosCrawler(awsClient());
+        VlabsChaosCrawler chaosCrawler = new VlabsChaosCrawler(awsClient());
         setChaosCrawler(tagKey.isEmpty() ? chaosCrawler : new FilteringChaosCrawler(chaosCrawler, new TagPredicate(tagKey, tagValue)));
         setChaosInstanceSelector(new BasicChaosInstanceSelector());
-        AmazonSimpleEmailServiceClient sesClient = new AmazonSimpleEmailServiceClient(awsClientConfig);
-        if (configuration().getStr("simianarmy.aws.email.region") != null) {
-           sesClient.setRegion(Region.getRegion(Regions.fromName(configuration().getStr("simianarmy.aws.email.region"))));
+        AmazonSimpleEmailServiceClientBuilder sesClientBuilder = AmazonSimpleEmailServiceClientBuilder.standard().withClientConfiguration(awsClientConfig);
+        if (cfg.getStr("simianarmy.client.aws.region") == null) {
+            LOGGER.info("Using default region " + DEFAULT_REGION);
+            sesClientBuilder.withRegion(DEFAULT_REGION);
+        } else if (cfg.getStr("simianarmy.client.aws.region").equals("us-east-1")) {
+            String msg = "Region property simianarmy.client.aws.region cannot be set to us-east-1.\n" +
+                "Change this property in client.properties";
+            LOGGER.error(msg);
+            throw new RuntimeException(msg);
+        } else {
+            sesClientBuilder.withRegion(configuration().getStr("simianarmy.aws.email.region"));
         }
+        AmazonSimpleEmailService sesClient = sesClientBuilder.build();
         setChaosEmailNotifier(new BasicChaosEmailNotifier(cfg, sesClient, null));
     }
 

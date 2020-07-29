@@ -29,7 +29,7 @@ import com.netflix.simianarmy.Resource;
 import com.netflix.simianarmy.ResourceType;
 
 /**
- * The class represents general AWS resources that are managed by janitor monkey.
+ * The class represents general AWS resources.
  */
 public class AWSResource implements Resource {
     private String id;
@@ -44,7 +44,6 @@ public class AWSResource implements Resource {
     private Date notificationTime;
     private Date launchTime;
     private Date markTime;
-    private boolean optOutOfJanitor;
     private String awsResourceState;
 
     /** The field name for resourceId. **/
@@ -71,8 +70,6 @@ public class AWSResource implements Resource {
     public static final String FIELD_LAUNCH_TIME = "launchTime";
     /** The field name for markTime. **/
     public static final String FIELD_MARK_TIME = "markTime";
-    /** The field name for isOptOutOfJanitor. **/
-    public static final String FIELD_OPT_OUT_OF_JANITOR = "optOutOfJanitor";
     /** The field name for awsResourceState. **/
     public static final String FIELD_AWS_RESOURCE_STATE = "awsResourceState";
 
@@ -103,10 +100,6 @@ public class AWSResource implements Resource {
         putToMapIfNotNull(fieldToValue, FIELD_LAUNCH_TIME, printDate(getLaunchTime()));
         putToMapIfNotNull(fieldToValue, FIELD_MARK_TIME, printDate(getMarkTime()));
         putToMapIfNotNull(fieldToValue, FIELD_AWS_RESOURCE_STATE, getAWSResourceState());
-
-        // Additional fields are serialized while tags are not. So if any tags need to be
-        // serialized as well, put them to additional fields.
-        fieldToValue.put(FIELD_OPT_OUT_OF_JANITOR, String.valueOf(isOptOutOfJanitor()));
 
         fieldToValue.putAll(additionalFields);
 
@@ -149,8 +142,6 @@ public class AWSResource implements Resource {
                 resource.setMarkTime(new Date(DATE_FORMATTER.parseDateTime(value).getMillis()));
             } else if (name.equals(FIELD_AWS_RESOURCE_STATE)) {
                 resource.setAWSResourceState(value);
-            } else if (name.equals(FIELD_OPT_OUT_OF_JANITOR)) {
-                resource.setOptOutOfJanitor("true".equals(value));
             } else {
                 // put all other fields into additional fields
                 resource.setAdditionalField(name, value);
@@ -395,25 +386,6 @@ public class AWSResource implements Resource {
         return this;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean isOptOutOfJanitor() {
-        return optOutOfJanitor;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setOptOutOfJanitor(boolean optOutOfJanitor) {
-        this.optOutOfJanitor = optOutOfJanitor;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Resource withOptOutOfJanitor(boolean optOut) {
-        setOptOutOfJanitor(optOut);
-        return this;
-    }
-
     private static Date getCopyOfDate(Date date) {
         if (date == null) {
             return null;
@@ -485,8 +457,7 @@ public class AWSResource implements Resource {
         .withRegion(getRegion())
         .withResourceType(getResourceType())
         .withState(getState())
-        .withTerminationReason(getTerminationReason())
-        .withOptOutOfJanitor(isOptOutOfJanitor());
+        .withTerminationReason(getTerminationReason());
         ((AWSResource) clone).setAWSResourceState(awsResourceState);
 
         ((AWSResource) clone).additionalFields.putAll(additionalFields);
@@ -531,7 +502,6 @@ public class AWSResource implements Resource {
                 ", notificationTime=" + notificationTime +
                 ", launchTime=" + launchTime +
                 ", markTime=" + markTime +
-                ", optOutOfJanitor=" + optOutOfJanitor +
                 ", awsResourceState='" + awsResourceState + '\'' +
                 ", additionalFields=" + additionalFields +
                 ", tags=" + tags +

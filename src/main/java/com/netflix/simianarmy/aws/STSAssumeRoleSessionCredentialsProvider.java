@@ -23,9 +23,10 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSSessionCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
-import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
+import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
 import com.amazonaws.services.securitytoken.model.AssumeRoleResult;
 import com.amazonaws.services.securitytoken.model.Credentials;
@@ -66,7 +67,7 @@ public class STSAssumeRoleSessionCredentialsProvider implements AWSCredentialsPr
      */
     public STSAssumeRoleSessionCredentialsProvider(String roleArn) {
         this.roleArn = roleArn;
-        securityTokenService = new AWSSecurityTokenServiceClient();
+        securityTokenService = AWSSecurityTokenServiceClientBuilder.defaultClient();
     }
 
     /**
@@ -82,7 +83,7 @@ public class STSAssumeRoleSessionCredentialsProvider implements AWSCredentialsPr
      */
     public STSAssumeRoleSessionCredentialsProvider(String roleArn, ClientConfiguration clientConfiguration) {
         this.roleArn = roleArn;
-        securityTokenService = new AWSSecurityTokenServiceClient(clientConfiguration);
+        securityTokenService = AWSSecurityTokenServiceClientBuilder.standard().withClientConfiguration(clientConfiguration).build();
     }
 
     /**
@@ -116,7 +117,9 @@ public class STSAssumeRoleSessionCredentialsProvider implements AWSCredentialsPr
     public STSAssumeRoleSessionCredentialsProvider(AWSCredentials longLivedCredentials, String roleArn,
             ClientConfiguration clientConfiguration) {
         this.roleArn = roleArn;
-        securityTokenService = new AWSSecurityTokenServiceClient(longLivedCredentials, clientConfiguration);
+        AWSCredentialsProvider provider = new AWSStaticCredentialsProvider(longLivedCredentials);
+        
+        securityTokenService = AWSSecurityTokenServiceClientBuilder.standard().withCredentials(provider).build();
     }
 
     /**
@@ -135,7 +138,7 @@ public class STSAssumeRoleSessionCredentialsProvider implements AWSCredentialsPr
     public STSAssumeRoleSessionCredentialsProvider(AWSCredentialsProvider longLivedCredentialsProvider,
             String roleArn) {
         this.roleArn = roleArn;
-        securityTokenService = new AWSSecurityTokenServiceClient(longLivedCredentialsProvider);
+        securityTokenService = AWSSecurityTokenServiceClientBuilder.standard().withCredentials(longLivedCredentialsProvider).build();
     }
 
     /**
@@ -156,7 +159,7 @@ public class STSAssumeRoleSessionCredentialsProvider implements AWSCredentialsPr
     public STSAssumeRoleSessionCredentialsProvider(AWSCredentialsProvider longLivedCredentialsProvider, String roleArn,
             ClientConfiguration clientConfiguration) {
         this.roleArn = roleArn;
-        securityTokenService = new AWSSecurityTokenServiceClient(longLivedCredentialsProvider, clientConfiguration);
+        securityTokenService = AWSSecurityTokenServiceClientBuilder.standard().withCredentials(longLivedCredentialsProvider).withClientConfiguration(clientConfiguration).build();
     }
 
     @Override
