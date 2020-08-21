@@ -78,7 +78,7 @@ public class VSphereClient extends AWSClient {
      * reinstall the given instance. If it is powered down this will be ignored and the
      * reinstall occurs the next time the machine is powered up.
      */
-    public void terminateInstance(String instanceId) {
+    public void stopInstance(String instanceId) {
         try {
             connection.connect();
 

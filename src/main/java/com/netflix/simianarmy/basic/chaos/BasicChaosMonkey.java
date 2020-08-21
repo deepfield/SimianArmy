@@ -139,7 +139,7 @@ public class BasicChaosMonkey extends ChaosMonkey {
                     LOGGER.warn("No chaos type was applicable to the instance: {}", inst);
                     return false;
                 }
-                terminateInstance(group, inst, chaosType);
+                applyChaos(group, inst, chaosType);
             }
         }
         return false;
@@ -187,7 +187,7 @@ public class BasicChaosMonkey extends ChaosMonkey {
             Collection<String> instances = context().chaosInstanceSelector().select(group, 1.0);
             Validate.isTrue(instances.size() <= 1);
             if (instances.size() == 1) {
-                return terminateInstance(group, instances.iterator().next(), chaosType);
+                return applyChaos(group, instances.iterator().next(), chaosType);
             } else {
                 throw new NotFoundException(String.format("No instance is found in group %s [type %s]",
                         name, type));
@@ -374,7 +374,7 @@ public class BasicChaosMonkey extends ChaosMonkey {
         return null;
     }
 
-    protected Event terminateInstance(InstanceGroup group, String inst, ChaosType chaosType) {
+    protected Event applyChaos(InstanceGroup group, String inst, ChaosType chaosType) {
         Validate.notNull(group);
         Validate.notEmpty(inst);
         String prop = NS + "leashed";

@@ -49,9 +49,9 @@ public class CloudFormationChaosMonkey extends BasicChaosMonkey {
      * {@inheritDoc}
      */
     @Override
-    protected Event terminateInstance(InstanceGroup group, String inst, ChaosType chaosType) {
+    protected Event applyChaos(InstanceGroup group, String inst, ChaosType chaosType) {
         InstanceGroup noSuffixGroup = noSuffixInstanceGroup(group);
-        return super.terminateInstance(noSuffixGroup, inst, chaosType);
+        return super.applyChaos(noSuffixGroup, inst, chaosType);
     }
 
     /**

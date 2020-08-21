@@ -120,7 +120,7 @@ public class TestMonkeyContext implements Monkey.Context {
     public CloudClient cloudClient() {
         return new CloudClient() {
             @Override
-            public void terminateInstance(String instanceId) {
+            public void stopInstance(String instanceId) {
             }
 
             @Override

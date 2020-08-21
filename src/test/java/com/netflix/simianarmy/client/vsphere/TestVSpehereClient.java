@@ -45,7 +45,7 @@ public class TestVSpehereClient {
         TerminationStrategy strategy = mock(PropertyBasedTerminationStrategy.class);
 
         VSphereClient client = new VSphereClient(strategy, connection);
-        client.terminateInstance("vm1");
+        client.stopInstance("vm1");
 
         verify(strategy, times(1)).terminate(vm1);
     }

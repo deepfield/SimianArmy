@@ -61,13 +61,6 @@ public class BasicChaosMonkeyContext extends BasicSimianArmyContext implements C
         MonkeyConfiguration cfg = configuration();
         String tagKey = cfg.getStrOrElse("simianarmy.chaos.IGtag.key", "");
         String tagValue = cfg.getStrOrElse("simianarmy.chaos.IGtag.value", "");
-        String specificVlabs = cfg.getStrOrElse("simianarmy.chaos.vlabs.name", "");
-        
-        if (specificVlabs.isEmpty() && tagKey.isEmpty()) {
-            String msg = "You should specify some vlabs to target. It is destructive to use chaos monkey on all vlab clusters.";
-            LOGGER.error(msg);
-            throw new RuntimeException(msg);
-        }
 
         VlabsChaosCrawler chaosCrawler = new VlabsChaosCrawler(awsClient());
         setChaosCrawler(tagKey.isEmpty() ? chaosCrawler : new FilteringChaosCrawler(chaosCrawler, new TagPredicate(tagKey, tagValue)));

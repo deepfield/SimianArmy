@@ -658,11 +658,11 @@ public class AWSClient implements CloudClient {
 
     /** {@inheritDoc} */
     @Override
-    public void terminateInstance(String instanceId) {
+    public void stopInstance(String instanceId) {
         Validate.notEmpty(instanceId);
-        LOGGER.info(String.format("Terminating instance %s in region %s.", instanceId, region));
+        LOGGER.info(String.format("Stopping instance %s in region %s.", instanceId, region));
         try {
-            ec2Client().terminateInstances(new TerminateInstancesRequest(Collections.singletonList(instanceId)));
+            ec2Client().stopInstances(new StopInstancesRequest(Collections.singletonList(instanceId)));
         } catch (AmazonServiceException e) {
             if (e.getErrorCode().equals("InvalidInstanceID.NotFound")) {
                 throw new NotFoundException("AWS instance " + instanceId + " not found", e);

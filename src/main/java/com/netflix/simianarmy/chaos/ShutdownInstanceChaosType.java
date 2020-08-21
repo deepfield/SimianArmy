@@ -21,7 +21,7 @@ import com.netflix.simianarmy.CloudClient;
 import com.netflix.simianarmy.MonkeyConfiguration;
 
 /**
- * Shuts down the instance using the cloud instance-termination API.
+ * Shuts down the instance using the cloud instance-stop API.
  *
  * This is the classic chaos-monkey strategy.
  */
@@ -44,7 +44,7 @@ public class ShutdownInstanceChaosType extends ChaosType {
         CloudClient cloudClient = instance.getCloudClient();
         String instanceId = instance.getInstanceId();
 
-        cloudClient.terminateInstance(instanceId);
+        cloudClient.stopInstance(instanceId);
     }
 
     /**

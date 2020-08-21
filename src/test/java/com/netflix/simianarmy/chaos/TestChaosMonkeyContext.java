@@ -214,7 +214,7 @@ public class TestChaosMonkeyContext extends TestMonkeyContext implements ChaosMo
     public CloudClient cloudClient() {
         return new CloudClient() {
             @Override
-            public void terminateInstance(String instanceId) {
+            public void stopInstance(String instanceId) {
                 terminated.add(instanceId);
             }
 
